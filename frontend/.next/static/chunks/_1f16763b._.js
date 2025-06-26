@@ -71,55 +71,124 @@ var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_
 __turbopack_context__.s({
     "archiveClassroom": (()=>archiveClassroom),
     "createClassroom": (()=>createClassroom),
+    "createStudent": (()=>createStudent),
+    "deleteStudent": (()=>deleteStudent),
     "fetchArchivedClassrooms": (()=>fetchArchivedClassrooms),
     "fetchClassrooms": (()=>fetchClassrooms),
+    "fetchStudent": (()=>fetchStudent),
+    "fetchStudents": (()=>fetchStudents),
     "unarchiveClassroom": (()=>unarchiveClassroom),
-    "updateClassroom": (()=>updateClassroom)
+    "updateClassroom": (()=>updateClassroom),
+    "updateStudent": (()=>updateStudent)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$build$2f$polyfills$2f$process$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/build/polyfills/process.js [app-client] (ecmascript)");
-const BASE_URL = "http://localhost:4000/api"; // ✅ make sure this matches server
+const BASE_URL = ("TURBOPACK compile-time truthy", 1) ? `${"TURBOPACK compile-time value", "http://localhost:4000"}/api` : ("TURBOPACK unreachable", undefined);
+// Helper to get token from localStorage
+function getAuthHeaders() {
+    if ("TURBOPACK compile-time falsy", 0) {
+        "TURBOPACK unreachable";
+    }
+    const token = localStorage.getItem("token");
+    return token ? {
+        Authorization: `Bearer ${token}`
+    } : {};
+}
 const fetchClassrooms = async ()=>{
-    const res = await fetch(`${BASE_URL}/classrooms`);
+    const res = await fetch(`${BASE_URL}/classrooms`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch classrooms");
     return res.json();
 };
 const createClassroom = async (data)=>{
     const res = await fetch(`${BASE_URL}/classrooms`, {
         method: "POST",
-        headers: {
+        headers: Object.assign({
             "Content-Type": "application/json"
-        },
+        }, getAuthHeaders()),
         body: JSON.stringify(data)
     });
+    if (!res.ok) throw new Error("Failed to create classroom");
     return res.json();
 };
 const updateClassroom = async (id, name)=>{
     const res = await fetch(`${BASE_URL}/classrooms/${id}`, {
         method: "PATCH",
-        headers: {
+        headers: Object.assign({
             "Content-Type": "application/json"
-        },
+        }, getAuthHeaders()),
         body: JSON.stringify({
             name
         })
     });
+    if (!res.ok) throw new Error("Failed to update classroom");
     return res.json();
 };
 const archiveClassroom = async (id)=>{
     const res = await fetch(`${BASE_URL}/classrooms/${id}/archive`, {
-        method: "PATCH"
+        method: "PATCH",
+        headers: getAuthHeaders()
     });
+    if (!res.ok) throw new Error("Failed to archive classroom");
     return res.json();
 };
 const fetchArchivedClassrooms = async ()=>{
-    const res = await fetch(`${("TURBOPACK compile-time value", "http://localhost:4000")}/api/classrooms/archived`);
+    const res = await fetch(`${BASE_URL}/classrooms/archived`, {
+        headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error("Failed to fetch archived classrooms");
     return res.json();
 };
 const unarchiveClassroom = async (id)=>{
-    const res = await fetch(`${("TURBOPACK compile-time value", "http://localhost:4000")}/api/classrooms/${id}/unarchive`, {
-        method: "PATCH"
+    const res = await fetch(`${BASE_URL}/classrooms/${id}/unarchive`, {
+        method: "PATCH",
+        headers: getAuthHeaders()
     });
     if (!res.ok) throw new Error("Failed to unarchive classroom");
+    return res.json();
+};
+const fetchStudents = async ()=>{
+    const res = await fetch(`${BASE_URL}/students`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch students");
+    return res.json();
+};
+const createStudent = async (data)=>{
+    const res = await fetch(`${BASE_URL}/students`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("Failed to create student");
+    return res.json();
+};
+const updateStudent = async (id, data)=>{
+    const res = await fetch(`${BASE_URL}/students/${id}`, {
+        method: "PUT",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("Failed to update student");
+    return res.json();
+};
+const deleteStudent = async (id)=>{
+    const res = await fetch(`${BASE_URL}/students/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to delete student");
+    return res.json();
+};
+const fetchStudent = async (id)=>{
+    const res = await fetch(`${BASE_URL}/students/${id}`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch student");
     return res.json();
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {

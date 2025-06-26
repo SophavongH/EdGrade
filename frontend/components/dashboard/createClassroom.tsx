@@ -35,29 +35,29 @@ export default function CreateClassroomModal({ classrooms, setClassrooms }: Prop
   const [error, setError] = useState("");
   const modalRef = useRef<HTMLDivElement | null>(null);
 
- const handleCreate = async () => {
-  const trimmedName = classroomName.trim();
-  if (trimmedName === "") {
-    setError("Classroom name cannot be empty.");
-    return;
-  }
+  const handleCreate = async () => {
+    const trimmedName = classroomName.trim();
+    if (trimmedName === "") {
+      setError("Classroom name cannot be empty.");
+      return;
+    }
 
-  const isDuplicate = classrooms.some(
-    (cls) => cls.name.toLowerCase() === trimmedName.toLowerCase()
-  );
+    const isDuplicate = classrooms.some(
+      (cls) => cls.name.toLowerCase() === trimmedName.toLowerCase()
+    );
 
-  if (isDuplicate) {
-    setError("Classroom name already exists.");
-    return;
-  }
+    if (isDuplicate) {
+      setError("Classroom name already exists.");
+      return;
+    }
 
-  const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
-  const newClassroom = await createClassroom({ name: trimmedName, color: randomColor });
+    const randomColor = colorOptions[Math.floor(Math.random() * colorOptions.length)];
+    const newClassroom = await createClassroom({ name: trimmedName, color: randomColor });
 
-  setClassrooms([...classrooms, newClassroom]);
-  setIsOpen(false);
-  setClassroomName("");
-};
+    setClassrooms([...classrooms, newClassroom]);
+    setIsOpen(false);
+    setClassroomName("");
+  };
 
   // Close on Escape key
   useEffect(() => {
@@ -87,20 +87,21 @@ export default function CreateClassroomModal({ classrooms, setClassrooms }: Prop
       {isOpen && (
         <div
           onClick={handleClickOutside}
-          className="fixed inset-0 flex justify-center items-center z-50 bg-black/10 backdrop-blur-sm"
+          className="fixed inset-0 flex justify-center items-center z-50 bg-black/30 backdrop-blur-sm"
         >
           <div
             ref={modalRef}
-            className="bg-white rounded p-6 shadow-lg relative w-80"
+            className="bg-white rounded-xl p-6 shadow-lg relative w-[370px] max-w-[90vw]"
           >
             <button
               onClick={() => setIsOpen(false)}
-              className="absolute top-2 right-2 text-gray-500 hover:text-black"
+              className="absolute top-3 right-3 text-gray-400 hover:text-black"
+              aria-label="Close"
             >
-              <X size={18} />
+              <X size={20} />
             </button>
-            <h2 className="text-center font-semibold mb-4">
-              Enter Classroom Name
+            <h2 className="text-lg font-semibold mb-4 text-gray-900">
+              Create Classroom
             </h2>
             <input
               type="text"
@@ -110,14 +111,14 @@ export default function CreateClassroomModal({ classrooms, setClassrooms }: Prop
                 setError("");
               }}
               placeholder="Classroom Name"
-              className="w-full border border-gray-300 rounded px-3 py-2 mb-2"
+              className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-3 focus:outline-none focus:ring-2 focus:ring-[#25388C] text-base"
             />
             {error && <p className="text-red-500 text-sm mb-2">{error}</p>}
             <Button
               onClick={handleCreate}
-              className="bg-[#25388C] hover:bg-[#1e2e6d] text-white w-full py-2 rounded"
+              className="bg-[#25388C] hover:bg-[#1e2e6d] text-white w-full py-2 rounded-lg text-base font-medium"
             >
-              Create
+              Save
             </Button>
           </div>
         </div>

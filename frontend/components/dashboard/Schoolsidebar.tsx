@@ -6,9 +6,10 @@ import Link from "next/link";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { cn, getInitials } from "@/lib/utils";
-import type { Session } from "@/lib/user"; // <-- FIXED: use your own type
+import type { Session } from "@/lib/user"; 
 import { adminSideBarLinks } from "@/constants";
 import { usePathname } from "next/navigation";
+import { LogOut } from "lucide-react";
 
 const SchoolSidebar = ({ session }: { session: Session }) => {
   const pathname = usePathname();
@@ -71,24 +72,41 @@ const SchoolSidebar = ({ session }: { session: Session }) => {
       </div>
 
       {/* User Profile Section */}
-      <div className="mt-8 flex items-center gap-3 rounded-lg bg-gray-50 p-3 md:bg-transparent md:p-0">
-        <Avatar className="flex-shrink-0">
-          <AvatarFallback className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-100 text-lg font-semibold text-black">
-            {getInitials(session?.user?.email || "IN")}
-          </AvatarFallback>
-        </Avatar>
-        
-        {/* User info - hidden on small screens */}
-        <div className="hidden min-w-0 flex-col sm:flex">
-          <p className="truncate text-sm font-medium text-gray-900">
-            {session?.user?.name || "User"}
-          </p>
-          <p className="truncate text-xs text-gray-500">
-            {session?.user?.email}
-          </p>
+      <div className="w-full flex justify-center">
+        <div className="flex items-center gap-3 rounded-[32px] bg-white shadow px-4 py-2 border border-gray-100 w-[95%] mx-auto">
+          {/* Avatar */}
+          <div className="relative">
+            <Avatar className="h-9 w-9">
+              <AvatarFallback className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-base font-semibold text-black">
+                {getInitials(session?.user?.name || session?.user?.email || "IN")}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+          {/* User info */}
+          <div className="flex flex-col min-w-0 flex-1">
+            <p className="truncate text-[15px] font-semibold text-gray-900 leading-5">
+              {session?.user?.name || "User"}
+            </p>
+            <p className="truncate text-[13px] text-gray-500 leading-4">
+              {session?.user?.email}
+            </p>
+          </div>
+          {/* Logout Icon Button */}
+          <button
+            onClick={() => {
+              localStorage.removeItem("token");
+              window.location.href = "/login";
+            }}
+            className="ml-1 flex items-center justify-center rounded-full bg-red-50 p-2 hover:bg-red-100 transition"
+            title="Logout"
+          >
+            <LogOut className="text-red-500 w-5 h-5" />
+          </button>
         </div>
       </div>
     </div>
+
+    
   );
 };
 

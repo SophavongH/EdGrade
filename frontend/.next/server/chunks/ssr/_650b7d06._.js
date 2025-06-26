@@ -63,56 +63,182 @@ function Button({ className, variant, size, asChild = false, ...props }) {
 var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
+    "addStudentsToClassroom": (()=>addStudentsToClassroom),
     "archiveClassroom": (()=>archiveClassroom),
     "createClassroom": (()=>createClassroom),
+    "createReportCard": (()=>createReportCard),
+    "createStudent": (()=>createStudent),
+    "deleteStudent": (()=>deleteStudent),
     "fetchArchivedClassrooms": (()=>fetchArchivedClassrooms),
+    "fetchClassroomById": (()=>fetchClassroomById),
+    "fetchClassroomStudents": (()=>fetchClassroomStudents),
     "fetchClassrooms": (()=>fetchClassrooms),
+    "fetchReportCards": (()=>fetchReportCards),
+    "fetchStudent": (()=>fetchStudent),
+    "fetchStudents": (()=>fetchStudents),
+    "removeStudentFromClassroom": (()=>removeStudentFromClassroom),
     "unarchiveClassroom": (()=>unarchiveClassroom),
-    "updateClassroom": (()=>updateClassroom)
+    "updateClassroom": (()=>updateClassroom),
+    "updateStudent": (()=>updateStudent)
 });
-const BASE_URL = "http://localhost:4000/api"; // ✅ make sure this matches server
+const BASE_URL = ("TURBOPACK compile-time truthy", 1) ? `${"TURBOPACK compile-time value", "http://localhost:4000"}/api` : ("TURBOPACK unreachable", undefined);
+// Helper to get token from localStorage
+function getAuthHeaders() {
+    if ("TURBOPACK compile-time truthy", 1) return {};
+    "TURBOPACK unreachable";
+    const token = undefined;
+}
 const fetchClassrooms = async ()=>{
-    const res = await fetch(`${BASE_URL}/classrooms`);
+    const res = await fetch(`${BASE_URL}/classrooms`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch classrooms");
     return res.json();
 };
 const createClassroom = async (data)=>{
     const res = await fetch(`${BASE_URL}/classrooms`, {
         method: "POST",
-        headers: {
+        headers: Object.assign({
             "Content-Type": "application/json"
-        },
+        }, getAuthHeaders()),
         body: JSON.stringify(data)
     });
+    if (!res.ok) throw new Error("Failed to create classroom");
     return res.json();
 };
 const updateClassroom = async (id, name)=>{
     const res = await fetch(`${BASE_URL}/classrooms/${id}`, {
         method: "PATCH",
-        headers: {
+        headers: Object.assign({
             "Content-Type": "application/json"
-        },
+        }, getAuthHeaders()),
         body: JSON.stringify({
             name
         })
     });
+    if (!res.ok) throw new Error("Failed to update classroom");
     return res.json();
 };
 const archiveClassroom = async (id)=>{
     const res = await fetch(`${BASE_URL}/classrooms/${id}/archive`, {
-        method: "PATCH"
+        method: "PATCH",
+        headers: getAuthHeaders()
     });
+    if (!res.ok) throw new Error("Failed to archive classroom");
     return res.json();
 };
 const fetchArchivedClassrooms = async ()=>{
-    const res = await fetch(`${("TURBOPACK compile-time value", "http://localhost:4000")}/api/classrooms/archived`);
+    const res = await fetch(`${BASE_URL}/classrooms/archived`, {
+        headers: getAuthHeaders()
+    });
     if (!res.ok) throw new Error("Failed to fetch archived classrooms");
     return res.json();
 };
 const unarchiveClassroom = async (id)=>{
-    const res = await fetch(`${("TURBOPACK compile-time value", "http://localhost:4000")}/api/classrooms/${id}/unarchive`, {
-        method: "PATCH"
+    const res = await fetch(`${BASE_URL}/classrooms/${id}/unarchive`, {
+        method: "PATCH",
+        headers: getAuthHeaders()
     });
     if (!res.ok) throw new Error("Failed to unarchive classroom");
+    return res.json();
+};
+const fetchStudents = async ()=>{
+    const res = await fetch(`${BASE_URL}/students`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch students");
+    return res.json();
+};
+const createStudent = async (data)=>{
+    const res = await fetch(`${BASE_URL}/students`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("Failed to create student");
+    return res.json();
+};
+const updateStudent = async (id, data)=>{
+    const res = await fetch(`${BASE_URL}/students/${id}`, {
+        method: "PUT",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error("Failed to update student");
+    return res.json();
+};
+const deleteStudent = async (id)=>{
+    const res = await fetch(`${BASE_URL}/students/${id}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to delete student");
+    return res.json();
+};
+const fetchStudent = async (id)=>{
+    const res = await fetch(`${BASE_URL}/students/${id}`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch student");
+    return res.json();
+};
+const fetchClassroomById = async (id)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${id}`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch classroom");
+    return res.json();
+};
+const fetchClassroomStudents = async (classroomId)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/students`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch classroom students");
+    return res.json();
+};
+const addStudentsToClassroom = async (classroomId, studentIds)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/students`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            studentIds
+        })
+    });
+    if (!res.ok) throw new Error("Failed to add students to classroom");
+    return res.json();
+};
+const removeStudentFromClassroom = async (classroomId, studentId)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/students/${studentId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to remove student from classroom");
+    return res.json();
+};
+const fetchReportCards = async (classroomId)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/report-cards`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report cards");
+    return res.json();
+};
+const createReportCard = async (classroomId, title)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/report-cards`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            title
+        })
+    });
+    if (!res.ok) throw new Error("Failed to create report card");
     return res.json();
 };
 }}),
@@ -299,7 +425,7 @@ function ArchivedClassroom() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "flex justify-between items-center gap-2",
+                className: "flex items-center gap-4 justify-center mt-4",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
                         className: "bg-[#25388C] hover:bg-[#1e2e6d]",

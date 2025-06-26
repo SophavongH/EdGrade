@@ -84,8 +84,8 @@ export default function ArchivedClassroom() {
         </table>
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-between items-center gap-2">
+       {/* Pagination Controls */}
+      <div className="flex items-center gap-4 justify-center mt-4">
         <Button
           className="bg-[#25388C] hover:bg-[#1e2e6d]"
           onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}

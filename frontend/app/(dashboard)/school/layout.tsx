@@ -1,13 +1,10 @@
-// frontend/app/(dashboard)/school/layout.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import SchoolSidebar from "@/components/dashboard/Schoolsidebar";
 import Header from "@/components/dashboard/Header";
 import { getUserInfo, Session } from "@/lib/user";
-
- 
-
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
@@ -15,17 +12,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (!token) {
       router.replace("/login");
       return;
     }
     getUserInfo(token)
       .then((user) => {
-        if (user.role !== "user") {
-          router.replace("/unauthorized");
-        } else {
+        if (user.role === "user") {
           setSession({ user });
+        } else if (user.role === "admin") {
+          router.replace("/admin"); // <-- redirect to admin dashboard
+        } else {
+          router.replace("/unauthorized");
         }
       })
       .catch(() => {
@@ -34,7 +33,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       .finally(() => setLoading(false));
   }, [router]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div className="flex h-screen w-full flex-col items-center justify-center">
+        <Image
+          src="/icons/math.gif"
+          alt="Loading..."
+          width={64}
+          height={64}
+          className="mb-4 h-16 w-16"
+        />
+      </div>
+    );
   if (!session) return null;
 
   return (
