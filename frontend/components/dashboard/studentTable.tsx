@@ -50,11 +50,11 @@ export default function StudentTable({ students, setStudents, classroomId }: Pro
         <table className="min-w-full text-sm text-left">
           <thead className="bg-gray-50 text-gray-600 uppercase text-xs hidden sm:table-header-group">
             <tr>
-              <th className="px-6 py-4 ">ឈ្មោះ</th>
-              <th className="px-6 py-4 ">លេខអត្តសញ្ញាណបុគ្គល</th>
-              <th className="px-6 py-4 ">ភេទ</th>
-              <th className="px-6 py-4 ">លេខទូរស័ព្ទមាតាបិតា</th>
-              <th className="px-6 py-4 ">បញ្ជារ</th>
+              <th className="px-6 py-4 ">Name</th>
+              <th className="px-6 py-4 ">Student ID</th>
+              <th className="px-6 py-4 ">Sex</th>
+              <th className="px-6 py-4 ">Parent&#39;s Phone Number</th>
+              <th className="px-6 py-4 ">Action</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 bg-white">
@@ -153,7 +153,7 @@ export default function StudentTable({ students, setStudents, classroomId }: Pro
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
           <div className="bg-white p-6 rounded-lg shadow-md w-[90%] max-w-sm text-center">
             <p className="font-semibold text-gray-800 mb-6">
-              តើអ្នកចង់លុបបុគ្គលនេះមែនទេ?
+              Are you sure you want to delete ?
             </p>
             <div className="flex justify-center gap-4 ">
               <Button
@@ -161,10 +161,10 @@ export default function StudentTable({ students, setStudents, classroomId }: Pro
                 variant="secondary"
                 onClick={() => setDeleteModalOpen(false)}
               >
-                បោះបង់
+                Cancel
               </Button>
               <Button variant="destructive" onClick={confirmDelete}>
-                លុបបុគ្គល
+                Delete
               </Button>
             </div>
           </div>

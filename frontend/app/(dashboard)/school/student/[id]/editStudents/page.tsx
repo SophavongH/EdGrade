@@ -78,11 +78,18 @@ export default function EditStudentPage() {
           className="w-36 h-36 rounded-full bg-orange-200 flex items-center justify-center cursor-pointer mb-6 overflow-hidden"
           onClick={() => document.getElementById("avatarInput")?.click()}
         >
-          {image ? (
-            <img src={image} alt="Profile" className="w-full h-full object-cover" />
-          ) : (
+            {image ? (
+            <Image
+              src={image}
+              alt="Profile"
+              className="w-full h-full object-cover"
+              width={144}
+              height={144}
+              unoptimized
+            />
+            ) : (
             <span className="text-6xl text-white">+</span>
-          )}
+            )}
           <input
             id="avatarInput"
             type="file"
@@ -97,7 +104,7 @@ export default function EditStudentPage() {
           value={form.name}
           onChange={handleChange}
           className="w-full rounded border px-4 py-2"
-          placeholder="ឈ្មោះ"
+          placeholder="Name"
           required
         />
         <input
@@ -106,7 +113,7 @@ export default function EditStudentPage() {
           value={form.dob}
           onChange={handleChange}
           className="w-full rounded border px-4 py-2"
-          placeholder="ថ្ងៃខែឆ្នាំកំណើត"
+          placeholder="Date of Birth"
         />
         <select
           name="gender"
@@ -116,22 +123,22 @@ export default function EditStudentPage() {
           required
         >
           <option value="">Select</option>
-          <option value="male">ប្រុស</option>
-          <option value="female">ស្រី</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
         </select>
         <input
           name="address"
           value={form.address}
           onChange={handleChange}
           className="w-full rounded border px-4 py-2"
-          placeholder="អាសយដ្ឋាន"
+          placeholder="Adress"
         />
         <input
           name="parentPhone"
           value={form.parentPhone}
           onChange={handleChange}
           className="w-full rounded border px-4 py-2"
-          placeholder="លេខទូរស័ព្ទមាតាបិតា"
+          placeholder="Parent's Phone Number"
           required
         />
         <Button
@@ -139,7 +146,7 @@ export default function EditStudentPage() {
           className="w-full bg-[#25388C] hover:bg-[#1e2e6d] text-white text-lg"
           disabled={loading}
         >
-          {loading ? "កំពុងកែប្រែ..." : "កែប្រែ"}
+          {loading ? "Editing..." : "Edit"}
         </Button>
       </form>
     </section>

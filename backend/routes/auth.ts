@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { eq } from "drizzle-orm";
 import { db } from "../database/drizzle";
 import { usersTable } from "../database/schema";
-import { JwtPayload } from "jsonwebtoken";
+
 
 const router = Router();
 
@@ -15,8 +15,9 @@ export function authenticateJWT(req: Request, res: Response, next: NextFunction)
 
   const token = authHeader.split(" ")[1];
   try {
+    // The JWT payload includes id, email, name, role
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    req.user = decoded as { id: string; email: string };
+    req.user = decoded as Express.User; // <-- assign all fields, not just id/email
     next();
   } catch {
     return res.status(401).json({ error: "Invalid token" });
@@ -31,16 +32,19 @@ router.post("/login", async (req: Request, res: Response) => {
       .select()
       .from(usersTable)
       .where(eq(usersTable.email, email));
+
     if (!user) {
-      console.log("User not found for email:", email);
-      return res.status(401).json({ success: false, error: "User not found" });
+      return res.status(401).json({ success: false, error: "Email is invalid" });
     }
+
+    // Check if the account is deactivated
+    if (user.status === "deactivated") {
+      return res.status(403).json({ error: "Account is suspended." });
+    }
+
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
-      console.log("Invalid password for email:", email);
-      return res
-        .status(401)
-        .json({ success: false, error: "Invalid password" });
+      return res.status(401).json({ success: false, error: "Password is invalid" });
     }
 
     const token = jwt.sign(
@@ -54,7 +58,13 @@ router.post("/login", async (req: Request, res: Response) => {
       { expiresIn: "12h" }
     );
 
-    return res.json({ success: true, token });
+    // Return user object!
+    return res.json({
+      success: true,
+      token,
+      role: user.role,
+      user: { id: user.id, email: user.email, name: user.name, role: user.role }
+    });
   } catch (err) {
     console.error("Login error:", err);
     return res

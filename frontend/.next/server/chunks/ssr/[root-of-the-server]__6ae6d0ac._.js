@@ -112,7 +112,8 @@ var { g: global, __dirname } = __turbopack_context__;
 __turbopack_context__.s({
     "FIELD_NAME": (()=>FIELD_NAME),
     "FIELD_TYPES": (()=>FIELD_TYPES),
-    "adminSideBarLinks": (()=>adminSideBarLinks)
+    "adminSideBarLinks": (()=>adminSideBarLinks),
+    "superAdminSideBarLinks": (()=>superAdminSideBarLinks)
 });
 const FIELD_NAME = {
     email: 'Email',
@@ -142,6 +143,13 @@ const adminSideBarLinks = [
         img: "/icons/admin/bookmark.svg",
         route: "/school/archived",
         text: "Archive Classrooms"
+    }
+];
+const superAdminSideBarLinks = [
+    {
+        img: "/icons/admin/home.svg",
+        route: "/admin",
+        text: "Home"
     }
 ];
 }}),
@@ -453,12 +461,12 @@ function Layout({ children }) {
             className: "mb-4 h-16 w-16"
         }, void 0, false, {
             fileName: "[project]/app/(dashboard)/school/layout.tsx",
-            lineNumber: 39,
+            lineNumber: 37,
             columnNumber: 9
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/(dashboard)/school/layout.tsx",
-        lineNumber: 38,
+        lineNumber: 36,
         columnNumber: 7
     }, this);
     if (!session) return null;
@@ -469,7 +477,7 @@ function Layout({ children }) {
                 session: session
             }, void 0, false, {
                 fileName: "[project]/app/(dashboard)/school/layout.tsx",
-                lineNumber: 52,
+                lineNumber: 50,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -479,20 +487,20 @@ function Layout({ children }) {
                         session: session
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/layout.tsx",
-                        lineNumber: 54,
+                        lineNumber: 52,
                         columnNumber: 9
                     }, this),
                     children
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/(dashboard)/school/layout.tsx",
-                lineNumber: 53,
+                lineNumber: 51,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/(dashboard)/school/layout.tsx",
-        lineNumber: 51,
+        lineNumber: 49,
         columnNumber: 5
     }, this);
 }

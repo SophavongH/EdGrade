@@ -9,7 +9,6 @@ function getAuthHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-
 // ---- CLASSROOMS ----
 
 export const fetchClassrooms = async () => {
@@ -150,4 +149,109 @@ export const removeStudentFromClassroom = async (classroomId: string | number, s
   if (!res.ok) throw new Error("Failed to remove student from classroom");
   return res.json();
 };
+
+// ---- REPORT CARDS ----
+export const fetchReportCards = async (classroomId: string) => {
+  const res = await fetch(
+    `${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`,
+    {
+      headers: getAuthHeaders(),
+    }
+  );
+  if (!res.ok) throw new Error("Failed to fetch report cards");
+  return res.json();
+};
+
+export const createReportCard = async (classroomId: string | number, title: string) => {
+  const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
+    method: "POST",
+    headers: Object.assign({ "Content-Type": "application/json" }, getAuthHeaders()),
+    body: JSON.stringify({ title }),
+  });
+  if (!res.ok) throw new Error("Failed to create report card");
+  return res.json();
+};
+
+export const deleteReportCard = async (reportCardId: number) => {
+  const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to delete report card");
+  return res.json();
+};
+
+
+export const saveReportCardScores = async (
+  reportCardId: string | number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  scores: Record<string, any>
+) => {
+  const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+    method: "POST",
+    headers: Object.assign({ "Content-Type": "application/json" }, getAuthHeaders()),
+    body: JSON.stringify({ scores }),
+  });
+  if (!res.ok) throw new Error("Failed to save report card scores");
+  return res.json();
+};
+
+export const fetchReportCardScores = async (reportCardId: string | number) => {
+  const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+    headers: getAuthHeaders(),
+  });
+  if (!res.ok) throw new Error("Failed to fetch report card scores");
+  return res.json();
+};
+
+export const sendReportCardSMS = async (reportCardId: string | number, studentIds: string[]) => {
+  const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/send-sms`, {
+    method: "POST",
+    headers: Object.assign({ "Content-Type": "application/json" }, getAuthHeaders()),
+    body: JSON.stringify({ studentIds }),
+  });
+  if (!res.ok) throw new Error("Failed to send SMS");
+  return res.json();
+}
+
+// ---- CUSTOM SUBJECTS ----
+
+export async function fetchCustomSubjects() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE_URL}/user-subjects`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Failed to fetch custom subjects");
+  return res.json();
+}
+
+export async function addCustomSubject(subject: string) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE_URL}/user-subjects`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ subject }),
+  });
+  if (!res.ok) throw new Error("Failed to add subject");
+  return res.json();
+}
+
+export async function deleteCustomSubject(subject: string) {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${BASE_URL}/user-subjects`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ subject }),
+  });
+  if (!res.ok) throw new Error("Failed to delete subject");
+  return res.json();
+}
 

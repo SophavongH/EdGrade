@@ -6,18 +6,27 @@
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
 __turbopack_context__.s({
+    "addCustomSubject": (()=>addCustomSubject),
     "addStudentsToClassroom": (()=>addStudentsToClassroom),
     "archiveClassroom": (()=>archiveClassroom),
     "createClassroom": (()=>createClassroom),
+    "createReportCard": (()=>createReportCard),
     "createStudent": (()=>createStudent),
+    "deleteCustomSubject": (()=>deleteCustomSubject),
+    "deleteReportCard": (()=>deleteReportCard),
     "deleteStudent": (()=>deleteStudent),
     "fetchArchivedClassrooms": (()=>fetchArchivedClassrooms),
     "fetchClassroomById": (()=>fetchClassroomById),
     "fetchClassroomStudents": (()=>fetchClassroomStudents),
     "fetchClassrooms": (()=>fetchClassrooms),
+    "fetchCustomSubjects": (()=>fetchCustomSubjects),
+    "fetchReportCardScores": (()=>fetchReportCardScores),
+    "fetchReportCards": (()=>fetchReportCards),
     "fetchStudent": (()=>fetchStudent),
     "fetchStudents": (()=>fetchStudents),
     "removeStudentFromClassroom": (()=>removeStudentFromClassroom),
+    "saveReportCardScores": (()=>saveReportCardScores),
+    "sendReportCardSMS": (()=>sendReportCardSMS),
     "unarchiveClassroom": (()=>unarchiveClassroom),
     "updateClassroom": (()=>updateClassroom),
     "updateStudent": (()=>updateStudent)
@@ -167,6 +176,108 @@ const removeStudentFromClassroom = async (classroomId, studentId)=>{
     if (!res.ok) throw new Error("Failed to remove student from classroom");
     return res.json();
 };
+const fetchReportCards = async (classroomId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report cards");
+    return res.json();
+};
+const createReportCard = async (classroomId, title)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            title
+        })
+    });
+    if (!res.ok) throw new Error("Failed to create report card");
+    return res.json();
+};
+const deleteReportCard = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to delete report card");
+    return res.json();
+};
+const saveReportCardScores = async (reportCardId, // eslint-disable-next-line @typescript-eslint/no-explicit-any
+scores)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            scores
+        })
+    });
+    if (!res.ok) throw new Error("Failed to save report card scores");
+    return res.json();
+};
+const fetchReportCardScores = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report card scores");
+    return res.json();
+};
+const sendReportCardSMS = async (reportCardId, studentIds)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/send-sms`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            studentIds
+        })
+    });
+    if (!res.ok) throw new Error("Failed to send SMS");
+    return res.json();
+};
+async function fetchCustomSubjects() {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}/user-subjects`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    if (!res.ok) throw new Error("Failed to fetch custom subjects");
+    return res.json();
+}
+async function addCustomSubject(subject) {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}/user-subjects`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            subject
+        })
+    });
+    if (!res.ok) throw new Error("Failed to add subject");
+    return res.json();
+}
+async function deleteCustomSubject(subject) {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}/user-subjects`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            subject
+        })
+    });
+    if (!res.ok) throw new Error("Failed to delete subject");
+    return res.json();
+}
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
@@ -300,7 +411,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                         className: "px-6 py-4 ",
-                                        children: "ឈ្មោះ"
+                                        children: "Name"
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard/studentTable.tsx",
                                         lineNumber: 53,
@@ -308,7 +419,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                         className: "px-6 py-4 ",
-                                        children: "លេខអត្តសញ្ញាណបុគ្គល"
+                                        children: "Student ID"
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard/studentTable.tsx",
                                         lineNumber: 54,
@@ -316,7 +427,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                         className: "px-6 py-4 ",
-                                        children: "ភេទ"
+                                        children: "Sex"
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard/studentTable.tsx",
                                         lineNumber: 55,
@@ -324,7 +435,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                         className: "px-6 py-4 ",
-                                        children: "លេខទូរស័ព្ទមាតាបិតា"
+                                        children: "Parent's Phone Number"
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard/studentTable.tsx",
                                         lineNumber: 56,
@@ -332,7 +443,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("th", {
                                         className: "px-6 py-4 ",
-                                        children: "បញ្ជារ"
+                                        children: "Action"
                                     }, void 0, false, {
                                         fileName: "[project]/components/dashboard/studentTable.tsx",
                                         lineNumber: 57,
@@ -560,7 +671,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: "font-semibold text-gray-800 mb-6",
-                            children: "តើអ្នកចង់លុបបុគ្គលនេះមែនទេ?"
+                            children: "Are you sure you want to delete ?"
                         }, void 0, false, {
                             fileName: "[project]/components/dashboard/studentTable.tsx",
                             lineNumber: 155,
@@ -573,7 +684,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                                     className: "bg-gray-400 hover:bg-gray-600 text-white",
                                     variant: "secondary",
                                     onClick: ()=>setDeleteModalOpen(false),
-                                    children: "បោះបង់"
+                                    children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/components/dashboard/studentTable.tsx",
                                     lineNumber: 159,
@@ -582,7 +693,7 @@ function StudentTable({ students, setStudents, classroomId }) {
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                                     variant: "destructive",
                                     onClick: confirmDelete,
-                                    children: "លុបបុគ្គល"
+                                    children: "Delete"
                                 }, void 0, false, {
                                     fileName: "[project]/components/dashboard/studentTable.tsx",
                                     lineNumber: 166,
@@ -661,7 +772,7 @@ function StudentPage() {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                         className: "text-2xl font-semibold",
-                        children: "សិស្សសរុប"
+                        children: "Total Students"
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/student/page.tsx",
                         lineNumber: 33,
@@ -672,7 +783,7 @@ function StudentPage() {
                         asChild: true,
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                             href: "/school/student/newStudents",
-                            children: "+ បង្កើតសិស្សថ្មី"
+                            children: "+ Create New Student"
                         }, void 0, false, {
                             fileName: "[project]/app/(dashboard)/school/student/page.tsx",
                             lineNumber: 35,

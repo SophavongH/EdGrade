@@ -90,7 +90,7 @@ const CreateStudent: React.FC<Props> = ({ setStudents }) => {
       {/* Form */}
       <form className="w-full max-w-2xl space-y-4" onSubmit={handleSubmit}>
         <div>
-          <label className="block mb-1">ឈ្មោះ:</label>
+          <label className="block mb-1">Name:</label>
           <input
             name="name"
             value={form.name}
@@ -101,7 +101,7 @@ const CreateStudent: React.FC<Props> = ({ setStudents }) => {
         </div>
         <div className="flex gap-4">
           <div className="flex-1">
-            <label className="block mb-1">ថ្ងៃខែឆ្នាំកំណើត</label>
+            <label className="block mb-1">Date of Birth</label>
             <input
               type="date"
               name="dob"
@@ -112,7 +112,7 @@ const CreateStudent: React.FC<Props> = ({ setStudents }) => {
             />
           </div>
           <div className="flex-1">
-            <label className="block mb-1">ភេទ</label>
+            <label className="block mb-1">Sex</label>
             <select
               name="gender"
               value={form.gender}
@@ -120,13 +120,13 @@ const CreateStudent: React.FC<Props> = ({ setStudents }) => {
               className="w-full rounded border px-4 py-2"
             >
               <option value="">Select</option>
-              <option value="male">ប្រុស</option>
-              <option value="female">ស្រី</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
             </select>
           </div>
         </div>
         <div>
-          <label className="block mb-1">អាសយដ្ឋាន</label>
+          <label className="block mb-1">Address</label>
           <input
             name="address"
             value={form.address}
@@ -136,7 +136,7 @@ const CreateStudent: React.FC<Props> = ({ setStudents }) => {
           />
         </div>
         <div>
-          <label className="block mb-1">លេខទូរស័ព្ទមាតាបិតា</label>
+          <label className="block mb-1">Parent&#39;s Phone Number</label>
           <input
             name="parentPhone"
             value={form.parentPhone}
@@ -149,7 +149,7 @@ const CreateStudent: React.FC<Props> = ({ setStudents }) => {
           type="submit"
           className="w-full bg-[#25388C] hover:bg-[#1e2e6d] text-white text-lg"
         >
-          បញ្ចូល
+          Create
         </Button>
       </form>
     </section>

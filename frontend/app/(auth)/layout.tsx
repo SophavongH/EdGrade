@@ -8,9 +8,10 @@ const layout = ({ children }: { children: ReactNode }) => {
       <div className="hidden lg:flex flex-col justify-center items-center w-1/2 px-8">
         <div className="flex flex-col items-center">
           <Image
+            priority
             src="/logo-login.svg"
             alt="EdGrade Logo"
-            width={320}
+            width={220}
             height={120}
           />
           <p className="text-gray-600 text-xl text-center max-w-sm">

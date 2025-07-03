@@ -32,23 +32,25 @@ var { g: global, __dirname } = __turbopack_context__;
 __turbopack_context__.s({
     "login": (()=>login)
 });
-const login = async (email, password)=>{
+async function login(email, password) {
     const res = await fetch(`${("TURBOPACK compile-time value", "http://localhost:4000")}/api/auth/login`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            "Content-Type": "application/json"
         },
         body: JSON.stringify({
             email,
             password
         })
     });
-    const data = await res.json();
-    if (data.success) {
-        localStorage.setItem('token', data.token); // store token
+    if (res.status === 403) {
+        return {
+            error: "Account is suspended."
+        };
     }
+    const data = await res.json();
     return data;
-};
+}
 }}),
 "[project]/constants.ts [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -58,7 +60,8 @@ var { g: global, __dirname } = __turbopack_context__;
 __turbopack_context__.s({
     "FIELD_NAME": (()=>FIELD_NAME),
     "FIELD_TYPES": (()=>FIELD_TYPES),
-    "adminSideBarLinks": (()=>adminSideBarLinks)
+    "adminSideBarLinks": (()=>adminSideBarLinks),
+    "superAdminSideBarLinks": (()=>superAdminSideBarLinks)
 });
 const FIELD_NAME = {
     email: 'Email',
@@ -90,6 +93,13 @@ const adminSideBarLinks = [
         text: "Archive Classrooms"
     }
 ];
+const superAdminSideBarLinks = [
+    {
+        img: "/icons/admin/home.svg",
+        route: "/admin",
+        text: "Home"
+    }
+];
 }}),
 "[project]/lib/utils.ts [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -98,7 +108,8 @@ var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
     "cn": (()=>cn),
-    "getInitials": (()=>getInitials)
+    "getInitials": (()=>getInitials),
+    "saveCustomSubjects": (()=>saveCustomSubjects)
 });
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$clsx$2f$dist$2f$clsx$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/clsx/dist/clsx.mjs [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$tailwind$2d$merge$2f$dist$2f$bundle$2d$mjs$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/tailwind-merge/dist/bundle-mjs.mjs [app-ssr] (ecmascript)");
@@ -111,6 +122,10 @@ const getInitials = (name)=>{
     if (!name) return "";
     return name.split(" ").filter(Boolean).map((part)=>part[0]).join("").toUpperCase().slice(0, 2);
 };
+function saveCustomSubjects(userId, subjects) {
+    if ("TURBOPACK compile-time truthy", 1) return;
+    "TURBOPACK unreachable";
+}
 }}),
 "[project]/components/ui/input.tsx [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -395,7 +410,7 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$constants$2e$ts__$5b$app$2d$
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/input.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/form.tsx [app-ssr] (ecmascript)");
-'use client';
+"use client";
 ;
 ;
 ;
@@ -416,17 +431,38 @@ function AuthForm() {
     const form = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hook$2d$form$2f$dist$2f$index$2e$esm$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useForm"])({
         resolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$hookform$2f$resolvers$2f$zod$2f$dist$2f$zod$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["zodResolver"])(loginSchema),
         defaultValues: {
-            email: '',
-            password: ''
+            email: "",
+            password: ""
         }
     });
     const onSubmit = async (data)=>{
+        // Clear previous errors
+        form.clearErrors();
         const result = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$auth$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["login"])(data.email, data.password);
+        // Check for suspended account error
+        if (result.error === "Account is suspended.") {
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error("Your account is suspended. Please contact support.");
+            return;
+        }
         if (result.success) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success('Login successful');
-            router.push(result.role === 'admin' ? '/admin' : '/school');
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success("Login successful");
+            if (result.token) localStorage.setItem("token", result.token); // <-- ADD THIS LINE
+            if (result.user?.id) localStorage.setItem("userId", result.user.id); // <-- ADD THIS LINE
+            router.push(result.role === "admin" ? "/admin" : "/school");
         } else {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error(result.error);
+            // Set error on the correct field
+            if (result.error?.toLowerCase().includes("email")) {
+                form.setError("email", {
+                    message: result.error
+                });
+            } else if (result.error?.toLowerCase().includes("password")) {
+                form.setError("password", {
+                    message: result.error
+                });
+            } else {
+                // fallback: show as a general error
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error(result.error || "Login failed");
+            }
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Form"], {
@@ -444,7 +480,7 @@ function AuthForm() {
                                         children: __TURBOPACK__imported__module__$5b$project$5d2f$constants$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FIELD_NAME"][field.name]
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/AuthForm.tsx",
-                                        lineNumber: 54,
+                                        lineNumber: 73,
                                         columnNumber: 17
                                     }, void 0),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -453,28 +489,28 @@ function AuthForm() {
                                             ...field
                                         }, void 0, false, {
                                             fileName: "[project]/components/ui/AuthForm.tsx",
-                                            lineNumber: 56,
+                                            lineNumber: 77,
                                             columnNumber: 19
                                         }, void 0)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/AuthForm.tsx",
-                                        lineNumber: 55,
+                                        lineNumber: 76,
                                         columnNumber: 17
                                     }, void 0),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                         fileName: "[project]/components/ui/AuthForm.tsx",
-                                        lineNumber: 61,
+                                        lineNumber: 82,
                                         columnNumber: 17
                                     }, void 0)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ui/AuthForm.tsx",
-                                lineNumber: 53,
+                                lineNumber: 72,
                                 columnNumber: 15
                             }, void 0)
                     }, field, false, {
                         fileName: "[project]/components/ui/AuthForm.tsx",
-                        lineNumber: 48,
+                        lineNumber: 67,
                         columnNumber: 11
                     }, this)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -482,18 +518,18 @@ function AuthForm() {
                     children: "Log in"
                 }, void 0, false, {
                     fileName: "[project]/components/ui/AuthForm.tsx",
-                    lineNumber: 66,
+                    lineNumber: 87,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/ui/AuthForm.tsx",
-            lineNumber: 46,
+            lineNumber: 65,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/ui/AuthForm.tsx",
-        lineNumber: 45,
+        lineNumber: 64,
         columnNumber: 5
     }, this);
 }

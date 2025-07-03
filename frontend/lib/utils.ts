@@ -1,8 +1,8 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const getInitials = (name: string): string => {
@@ -15,3 +15,9 @@ export const getInitials = (name: string): string => {
     .toUpperCase()
     .slice(0, 2);
 };
+
+// Save custom subjects for a user to localStorage
+export function saveCustomSubjects(userId: string, subjects: string[]) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(`custom_subjects_${userId}`, JSON.stringify(subjects));
+}

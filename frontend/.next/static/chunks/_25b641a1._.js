@@ -72,15 +72,21 @@ __turbopack_context__.s({
     "addStudentsToClassroom": (()=>addStudentsToClassroom),
     "archiveClassroom": (()=>archiveClassroom),
     "createClassroom": (()=>createClassroom),
+    "createReportCard": (()=>createReportCard),
     "createStudent": (()=>createStudent),
+    "deleteReportCard": (()=>deleteReportCard),
     "deleteStudent": (()=>deleteStudent),
     "fetchArchivedClassrooms": (()=>fetchArchivedClassrooms),
     "fetchClassroomById": (()=>fetchClassroomById),
     "fetchClassroomStudents": (()=>fetchClassroomStudents),
     "fetchClassrooms": (()=>fetchClassrooms),
+    "fetchReportCardScores": (()=>fetchReportCardScores),
+    "fetchReportCards": (()=>fetchReportCards),
     "fetchStudent": (()=>fetchStudent),
     "fetchStudents": (()=>fetchStudents),
     "removeStudentFromClassroom": (()=>removeStudentFromClassroom),
+    "saveReportCardScores": (()=>saveReportCardScores),
+    "sendReportCardSMS": (()=>sendReportCardSMS),
     "unarchiveClassroom": (()=>unarchiveClassroom),
     "updateClassroom": (()=>updateClassroom),
     "updateStudent": (()=>updateStudent)
@@ -228,6 +234,68 @@ const removeStudentFromClassroom = async (classroomId, studentId)=>{
         headers: getAuthHeaders()
     });
     if (!res.ok) throw new Error("Failed to remove student from classroom");
+    return res.json();
+};
+const fetchReportCards = async (classroomId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report cards");
+    return res.json();
+};
+const createReportCard = async (classroomId, title)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            title
+        })
+    });
+    if (!res.ok) throw new Error("Failed to create report card");
+    return res.json();
+};
+const deleteReportCard = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to delete report card");
+    return res.json();
+};
+const saveReportCardScores = async (reportCardId, // eslint-disable-next-line @typescript-eslint/no-explicit-any
+scores)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            scores
+        })
+    });
+    if (!res.ok) throw new Error("Failed to save report card scores");
+    return res.json();
+};
+const fetchReportCardScores = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report card scores");
+    return res.json();
+};
+const sendReportCardSMS = async (reportCardId, studentIds)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/send-sms`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            studentIds
+        })
+    });
+    if (!res.ok) throw new Error("Failed to send SMS");
     return res.json();
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -385,7 +453,7 @@ const StudentForm = ()=>{
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                         className: "block mb-1",
-                                        children: "ឈ្មោះ:"
+                                        children: "Name:"
                                     }, void 0, false, {
                                         fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                         lineNumber: 97,
@@ -417,7 +485,7 @@ const StudentForm = ()=>{
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block mb-1",
-                                                children: "ថ្ងៃខែឆ្នាំកំណើត"
+                                                children: "Date of Birth"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                                 lineNumber: 109,
@@ -446,7 +514,7 @@ const StudentForm = ()=>{
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                                 className: "block mb-1",
-                                                children: "ភេទ"
+                                                children: "Sex"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                                 lineNumber: 120,
@@ -469,7 +537,7 @@ const StudentForm = ()=>{
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                         value: "male",
-                                                        children: "ប្រុស"
+                                                        children: "Male"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                                         lineNumber: 129,
@@ -477,7 +545,7 @@ const StudentForm = ()=>{
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                                         value: "female",
-                                                        children: "ស្រី"
+                                                        children: "Female"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                                         lineNumber: 130,
@@ -505,7 +573,7 @@ const StudentForm = ()=>{
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                         className: "block mb-1",
-                                        children: "អាសយដ្ឋាន"
+                                        children: "Address"
                                     }, void 0, false, {
                                         fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                         lineNumber: 135,
@@ -532,7 +600,7 @@ const StudentForm = ()=>{
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
                                         className: "block mb-1",
-                                        children: "លេខទូរស័ព្ទមាតាបិតា"
+                                        children: "Parent's Phone Number "
                                     }, void 0, false, {
                                         fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                         lineNumber: 145,
@@ -560,7 +628,7 @@ const StudentForm = ()=>{
                                 type: "submit",
                                 className: "w-full bg-[#25388C] hover:bg-[#1e2e6d] text-white text-lg",
                                 disabled: loading,
-                                children: loading ? "កំពុងបញ្ចូល..." : "បញ្ចូល"
+                                children: loading ? "Creating..." : "Create"
                             }, void 0, false, {
                                 fileName: "[project]/app/(dashboard)/school/student/newStudents/page.tsx",
                                 lineNumber: 155,

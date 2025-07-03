@@ -30,10 +30,10 @@ export default function StudentPage() {
   return (
     <section className="w-full rounded-2xl bg-white p-7">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">សិស្សសរុប</h1>
+        <h1 className="text-2xl font-semibold">Total Students</h1>
         <Button className="bg-[#25388C] hover:bg-[#1e2e6d] "asChild>
           <Link href="/school/student/newStudents">
-            + បង្កើតសិស្សថ្មី
+            + Create New Student
           </Link>
         </Button>
       </div>

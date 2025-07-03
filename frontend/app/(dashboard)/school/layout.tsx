@@ -21,8 +21,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       .then((user) => {
         if (user.role === "user") {
           setSession({ user });
-        } else if (user.role === "admin") {
-          router.replace("/admin"); // <-- redirect to admin dashboard
         } else {
           router.replace("/unauthorized");
         }
@@ -37,11 +35,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex h-screen w-full flex-col items-center justify-center">
         <Image
+          priority
           src="/icons/math.gif"
           alt="Loading..."
           width={64}
           height={64}
           className="mb-4 h-16 w-16"
+          unoptimized
+        
         />
       </div>
     );

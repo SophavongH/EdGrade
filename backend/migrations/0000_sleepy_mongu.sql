@@ -39,3 +39,24 @@ CREATE TABLE classroom_students (
   UNIQUE(classroom_id, student_id)
 );
 --> statement-breakpoint
+CREATE TABLE report_card_scores (
+  id SERIAL PRIMARY KEY,
+  report_card_id INTEGER NOT NULL,
+  student_id UUID NOT NULL,
+  absent TEXT,
+  scores JSONB,
+  total TEXT,
+  average TEXT,
+  grade TEXT,
+  rank TEXT,
+  UNIQUE (report_card_id, student_id)
+);
+
+CREATE TABLE report_card_tokens (
+  id SERIAL PRIMARY KEY,
+  student_id UUID NOT NULL,
+  report_card_id INTEGER NOT NULL,
+  token VARCHAR(64) NOT NULL UNIQUE,
+  used BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP DEFAULT NOW()
+);

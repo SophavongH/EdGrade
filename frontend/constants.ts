@@ -30,3 +30,10 @@ export const adminSideBarLinks = [
   },
   
 ];
+export const superAdminSideBarLinks = [
+  {
+    img: "/icons/admin/home.svg",
+    route: "/admin",
+    text: "Home",
+  },
+];

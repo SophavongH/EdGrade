@@ -96,7 +96,8 @@ var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_
 __turbopack_context__.s({
     "FIELD_NAME": (()=>FIELD_NAME),
     "FIELD_TYPES": (()=>FIELD_TYPES),
-    "adminSideBarLinks": (()=>adminSideBarLinks)
+    "adminSideBarLinks": (()=>adminSideBarLinks),
+    "superAdminSideBarLinks": (()=>superAdminSideBarLinks)
 });
 const FIELD_NAME = {
     email: 'Email',
@@ -128,6 +129,13 @@ const adminSideBarLinks = [
         text: "Archive Classrooms"
     }
 ];
+const superAdminSideBarLinks = [
+    {
+        img: "/icons/admin/home.svg",
+        route: "/admin",
+        text: "Home"
+    }
+];
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }
@@ -148,7 +156,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$radix$2d$u
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$constants$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/constants.ts [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/log-out.js [app-client] (ecmascript) <export default as LogOut>");
+(()=>{
+    const e = new Error("Cannot find module './ProfileMenuUp'");
+    e.code = 'MODULE_NOT_FOUND';
+    throw e;
+})();
 ;
 var _s = __turbopack_context__.k.signature();
 "use client";
@@ -178,7 +190,7 @@ const SchoolSidebar = ({ session })=>{
                                 height: 37
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                lineNumber: 22,
+                                lineNumber: 24,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -186,13 +198,13 @@ const SchoolSidebar = ({ session })=>{
                                 children: "EdGrade"
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                lineNumber: 28,
+                                lineNumber: 30,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                        lineNumber: 21,
+                        lineNumber: 23,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -214,7 +226,7 @@ const SchoolSidebar = ({ session })=>{
                                             className: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["cn"])("transition-all duration-200", isSelected ? "brightness-0 invert" : "")
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                            lineNumber: 56,
+                                            lineNumber: 58,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -222,30 +234,30 @@ const SchoolSidebar = ({ session })=>{
                                             children: link.text
                                         }, void 0, false, {
                                             fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                            lineNumber: 66,
+                                            lineNumber: 68,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                    lineNumber: 44,
+                                    lineNumber: 46,
                                     columnNumber: 17
                                 }, this)
                             }, link.route, false, {
                                 fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                lineNumber: 43,
+                                lineNumber: 45,
                                 columnNumber: 15
                             }, this);
                         })
                     }, void 0, false, {
                         fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                        lineNumber: 34,
+                        lineNumber: 36,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                lineNumber: 19,
+                lineNumber: 21,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -262,17 +274,17 @@ const SchoolSidebar = ({ session })=>{
                                     children: (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getInitials"])(session?.user?.name || session?.user?.email || "IN")
                                 }, void 0, false, {
                                     fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                    lineNumber: 80,
+                                    lineNumber: 82,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                lineNumber: 79,
+                                lineNumber: 81,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                            lineNumber: 78,
+                            lineNumber: 80,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -283,7 +295,7 @@ const SchoolSidebar = ({ session })=>{
                                     children: session?.user?.name || "User"
                                 }, void 0, false, {
                                     fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                    lineNumber: 87,
+                                    lineNumber: 89,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -291,49 +303,38 @@ const SchoolSidebar = ({ session })=>{
                                     children: session?.user?.email
                                 }, void 0, false, {
                                     fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                    lineNumber: 90,
+                                    lineNumber: 92,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                            lineNumber: 86,
+                            lineNumber: 88,
                             columnNumber: 11
                         }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                            onClick: ()=>{
-                                localStorage.removeItem("token");
-                                window.location.href = "/login";
-                            },
-                            className: "ml-1 flex items-center justify-center rounded-full bg-red-50 p-2 hover:bg-red-100 transition",
-                            title: "Logout",
-                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$log$2d$out$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__LogOut$3e$__["LogOut"], {
-                                className: "text-red-500 w-5 h-5"
-                            }, void 0, false, {
-                                fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                                lineNumber: 103,
-                                columnNumber: 13
-                            }, this)
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ProfileMenuUp, {
+                            name: session?.user?.name,
+                            email: session?.user?.email
                         }, void 0, false, {
                             fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                            lineNumber: 95,
+                            lineNumber: 97,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                    lineNumber: 76,
+                    lineNumber: 78,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-                lineNumber: 75,
+                lineNumber: 77,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/components/dashboard/Schoolsidebar.tsx",
-        lineNumber: 18,
+        lineNumber: 20,
         columnNumber: 5
     }, this);
 };
@@ -458,8 +459,6 @@ function Layout({ children }) {
                         setSession({
                             user
                         });
-                    } else if (user.role === "admin") {
-                        router.replace("/admin"); // <-- redirect to admin dashboard
                     } else {
                         router.replace("/unauthorized");
                     }
@@ -478,19 +477,21 @@ function Layout({ children }) {
     if (loading) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "flex h-screen w-full flex-col items-center justify-center",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+            priority: true,
             src: "/icons/math.gif",
             alt: "Loading...",
             width: 64,
             height: 64,
-            className: "mb-4 h-16 w-16"
+            className: "mb-4 h-16 w-16",
+            unoptimized: true
         }, void 0, false, {
             fileName: "[project]/app/(dashboard)/school/layout.tsx",
-            lineNumber: 39,
+            lineNumber: 37,
             columnNumber: 9
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/(dashboard)/school/layout.tsx",
-        lineNumber: 38,
+        lineNumber: 36,
         columnNumber: 7
     }, this);
     if (!session) return null;
@@ -501,7 +502,7 @@ function Layout({ children }) {
                 session: session
             }, void 0, false, {
                 fileName: "[project]/app/(dashboard)/school/layout.tsx",
-                lineNumber: 52,
+                lineNumber: 53,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -511,20 +512,20 @@ function Layout({ children }) {
                         session: session
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/layout.tsx",
-                        lineNumber: 54,
+                        lineNumber: 55,
                         columnNumber: 9
                     }, this),
                     children
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/(dashboard)/school/layout.tsx",
-                lineNumber: 53,
+                lineNumber: 54,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/(dashboard)/school/layout.tsx",
-        lineNumber: 51,
+        lineNumber: 52,
         columnNumber: 5
     }, this);
 }

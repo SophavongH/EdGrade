@@ -120,6 +120,10 @@ router.get("/:id/students", async (req, res) => {
   if (!req.user || !req.user.id) return res.status(401).json({ error: "Unauthorized" });
   const classroomId = parseInt(req.params.id);
 
+  if (isNaN(classroomId)) {
+    return res.status(400).json({ error: "Invalid classroom ID" });
+  }
+
   // Check classroom ownership
   const classroom = await db.select().from(classroomsTable)
     .where(and(eq(classroomsTable.id, classroomId), eq(classroomsTable.userId, req.user.id)));
@@ -205,7 +209,6 @@ router.delete("/:classroomId/students/:studentId", async (req, res) => {
 
   res.json({ success: true });
 });
-
 
 
 

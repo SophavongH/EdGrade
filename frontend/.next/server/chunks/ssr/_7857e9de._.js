@@ -9,12 +9,15 @@ __turbopack_context__.s({
     "addStudentsToClassroom": (()=>addStudentsToClassroom),
     "archiveClassroom": (()=>archiveClassroom),
     "createClassroom": (()=>createClassroom),
+    "createReportCard": (()=>createReportCard),
     "createStudent": (()=>createStudent),
+    "deleteReportCard": (()=>deleteReportCard),
     "deleteStudent": (()=>deleteStudent),
     "fetchArchivedClassrooms": (()=>fetchArchivedClassrooms),
     "fetchClassroomById": (()=>fetchClassroomById),
     "fetchClassroomStudents": (()=>fetchClassroomStudents),
     "fetchClassrooms": (()=>fetchClassrooms),
+    "fetchReportCards": (()=>fetchReportCards),
     "fetchStudent": (()=>fetchStudent),
     "fetchStudents": (()=>fetchStudents),
     "removeStudentFromClassroom": (()=>removeStudentFromClassroom),
@@ -160,6 +163,34 @@ const removeStudentFromClassroom = async (classroomId, studentId)=>{
         headers: getAuthHeaders()
     });
     if (!res.ok) throw new Error("Failed to remove student from classroom");
+    return res.json();
+};
+const fetchReportCards = async (classroomId)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/report-cards`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report cards");
+    return res.json();
+};
+const createReportCard = async (classroomId, title)=>{
+    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/report-cards`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            title
+        })
+    });
+    if (!res.ok) throw new Error("Failed to create report card");
+    return res.json();
+};
+const deleteReportCard = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to delete report card");
     return res.json();
 };
 }}),
@@ -896,24 +927,24 @@ const ClassroomName = ({ id })=>{
         children: "Loading..."
     }, void 0, false, {
         fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-        lineNumber: 28,
-        columnNumber: 25
+        lineNumber: 36,
+        columnNumber: 23
     }, this);
     if (!classroom) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
         className: "text-red-500",
         children: "Classroom Not Found"
     }, void 0, false, {
         fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-        lineNumber: 29,
-        columnNumber: 28
+        lineNumber: 38,
+        columnNumber: 12
     }, this);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
         className: "text-xl font-semibold",
         children: classroom.name
     }, void 0, false, {
         fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-        lineNumber: 30,
-        columnNumber: 12
+        lineNumber: 39,
+        columnNumber: 10
     }, this);
 };
 const Page = ()=>{
@@ -963,13 +994,13 @@ const Page = ()=>{
                     id: params.id
                 }, void 0, false, {
                     fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                    lineNumber: 75,
-                    columnNumber: 51
+                    lineNumber: 87,
+                    columnNumber: 43
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                lineNumber: 74,
-                columnNumber: 13
+                lineNumber: 86,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "mt-4 pt-3",
@@ -988,8 +1019,8 @@ const Page = ()=>{
                                             children: "Report Card"
                                         }, void 0, false, {
                                             fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                            lineNumber: 81,
-                                            columnNumber: 29
+                                            lineNumber: 93,
+                                            columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             className: `pb-2 text-base focus:outline-none ${tab === 1 ? "border-b-2 border-black text-black font-semibold" : "text-gray-400 hover:text-black"}`,
@@ -997,57 +1028,89 @@ const Page = ()=>{
                                             children: "Students"
                                         }, void 0, false, {
                                             fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                            lineNumber: 91,
-                                            columnNumber: 29
+                                            lineNumber: 103,
+                                            columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                    lineNumber: 80,
-                                    columnNumber: 25
+                                    lineNumber: 92,
+                                    columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                    children: tab === 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
-                                        className: "bg-[#25388C] hover:bg-[#1e2e6d] text-white font-medium text-sm flex items-center gap-2 px-4 py-2 rounded-lg",
-                                        onClick: ()=>setShowAddStudentModal(true),
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                width: "18",
-                                                height: "18",
-                                                fill: "none",
-                                                viewBox: "0 0 18 18",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                    d: "M9 4v10M4 9h10",
-                                                    stroke: "currentColor",
-                                                    strokeWidth: "2",
-                                                    strokeLinecap: "round"
+                                    children: [
+                                        tab === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                            className: "bg-[#25388C] hover:bg-[#1e2e6d] text-white font-medium text-sm flex items-center gap-2 px-4 py-2 rounded-lg",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                    width: "18",
+                                                    height: "18",
+                                                    fill: "none",
+                                                    viewBox: "0 0 18 18",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                        d: "M9 4v10M4 9h10",
+                                                        stroke: "currentColor",
+                                                        strokeWidth: "2",
+                                                        strokeLinecap: "round"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
+                                                        lineNumber: 118,
+                                                        columnNumber: 21
+                                                    }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                                    lineNumber: 109,
-                                                    columnNumber: 41
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                                lineNumber: 108,
-                                                columnNumber: 37
-                                            }, this),
-                                            "បញ្ចូលសិស្សទៅក្នុងថ្នាក់"
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                        lineNumber: 104,
-                                        columnNumber: 33
-                                    }, this)
-                                }, void 0, false, {
+                                                    lineNumber: 117,
+                                                    columnNumber: 19
+                                                }, this),
+                                                "បង្កើតតារាពិន្ទុថ្មី"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
+                                            lineNumber: 116,
+                                            columnNumber: 17
+                                        }, this),
+                                        tab === 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
+                                            className: "bg-[#25388C] hover:bg-[#1e2e6d] text-white font-medium text-sm flex items-center gap-2 px-4 py-2 rounded-lg",
+                                            onClick: ()=>setShowAddStudentModal(true),
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                    width: "18",
+                                                    height: "18",
+                                                    fill: "none",
+                                                    viewBox: "0 0 18 18",
+                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                        d: "M9 4v10M4 9h10",
+                                                        stroke: "currentColor",
+                                                        strokeWidth: "2",
+                                                        strokeLinecap: "round"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
+                                                        lineNumber: 134,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
+                                                    lineNumber: 133,
+                                                    columnNumber: 19
+                                                }, this),
+                                                "បញ្ចូលសិស្សទៅក្នុងថ្នាក់"
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
+                                            lineNumber: 129,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
                                     fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                    lineNumber: 102,
-                                    columnNumber: 25
+                                    lineNumber: 114,
+                                    columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                            lineNumber: 79,
-                            columnNumber: 21
+                            lineNumber: 91,
+                            columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "bg-white rounded-xl border border-gray-200 p-5",
@@ -1061,25 +1124,25 @@ const Page = ()=>{
                                     classroomId: params.id
                                 }, void 0, false, {
                                     fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                                    lineNumber: 120,
-                                    columnNumber: 29
+                                    lineNumber: 150,
+                                    columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                            lineNumber: 117,
-                            columnNumber: 21
+                            lineNumber: 147,
+                            columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                    lineNumber: 78,
-                    columnNumber: 17
+                    lineNumber: 90,
+                    columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                lineNumber: 77,
-                columnNumber: 13
+                lineNumber: 89,
+                columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$dashboard$2f$addStudent$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {
                 open: showAddStudentModal,
@@ -1090,14 +1153,14 @@ const Page = ()=>{
                 setSelected: setSelectedStudents
             }, void 0, false, {
                 fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-                lineNumber: 130,
-                columnNumber: 13
+                lineNumber: 160,
+                columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/(dashboard)/school/classrooms/[id]/page.tsx",
-        lineNumber: 73,
-        columnNumber: 9
+        lineNumber: 85,
+        columnNumber: 5
     }, this);
 };
 const __TURBOPACK__default__export__ = Page;

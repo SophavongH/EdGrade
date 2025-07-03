@@ -72,7 +72,7 @@ export default function CreateReportCardModal({ open, onClose, onCreate }: Props
           <X size={20} />
         </button>
         <h2 className="text-lg font-semibold mb-4 text-gray-900">
-          បង្កើតតារាពិន្ទុថ្មី
+          Create Report Card
         </h2>
         <form onSubmit={handleSubmit}>
           <input
@@ -91,7 +91,7 @@ export default function CreateReportCardModal({ open, onClose, onCreate }: Props
             className="bg-[#25388C] hover:bg-[#1e2e6d] text-white w-full py-2 rounded-lg text-base font-medium"
             disabled={loading}
           >
-            {loading ? "កំពុងបង្កើត..." : "បង្កើត"}
+            {loading ? "Creating..." : "Create"}
           </Button>
         </form>
       </div>

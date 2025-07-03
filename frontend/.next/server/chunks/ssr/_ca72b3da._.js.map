@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/hengs/Desktop/fyp/frontend/app/%28dashboard%29/admin/layout.tsx"],"sourcesContent":["\"use client\";\r\n\r\nexport default function AdminLayout({ children }: { children: React.ReactNode }) {\r\n  return (\r\n    <div className=\"flex min-h-screen w-full flex-row\">\r\n      {children}\r\n    </div>\r\n  );\r\n}"],"names":[],"mappings":";;;;AAAA;;AAEe,SAAS,YAAY,EAAE,QAAQ,EAAiC;IAC7E,qBACE,8OAAC;QAAI,WAAU;kBACZ;;;;;;AAGP","debugId":null}},
+    {"offset": {"line": 28, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/hengs/Desktop/fyp/frontend/node_modules/next/src/server/route-modules/app-page/vendored/ssr/react-jsx-dev-runtime.ts"],"sourcesContent":["module.exports = require('../../module.compiled').vendored[\n  'react-ssr'\n].ReactJsxDevRuntime\n"],"names":["module","exports","require","vendored","ReactJsxDevRuntime"],"mappings":";AAAAA,OAAOC,OAAO,GAAGC,QAAQ,4HAAyBC,QAAQ,CACxD,YACD,CAACC,kBAAkB","ignoreList":[0],"debugId":null}}]
+}

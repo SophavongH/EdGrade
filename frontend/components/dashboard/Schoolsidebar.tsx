@@ -9,7 +9,8 @@ import { cn, getInitials } from "@/lib/utils";
 import type { Session } from "@/lib/user"; 
 import { adminSideBarLinks } from "@/constants";
 import { usePathname } from "next/navigation";
-import { LogOut } from "lucide-react";
+import ProfileMenuUp from "./profileMenuUp"; // Add this import
+
 
 const SchoolSidebar = ({ session }: { session: Session }) => {
   const pathname = usePathname();
@@ -91,17 +92,11 @@ const SchoolSidebar = ({ session }: { session: Session }) => {
               {session?.user?.email}
             </p>
           </div>
-          {/* Logout Icon Button */}
-          <button
-            onClick={() => {
-              localStorage.removeItem("token");
-              window.location.href = "/login";
-            }}
-            className="ml-1 flex items-center justify-center rounded-full bg-red-50 p-2 hover:bg-red-100 transition"
-            title="Logout"
-          >
-            <LogOut className="text-red-500 w-5 h-5" />
-          </button>
+          {/* Open menu button */}
+          <ProfileMenuUp
+            name={session?.user?.name}
+            email={session?.user?.email}
+          />
         </div>
       </div>
     </div>

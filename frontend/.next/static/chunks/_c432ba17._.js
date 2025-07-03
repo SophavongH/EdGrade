@@ -69,20 +69,27 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 var { g: global, __dirname, k: __turbopack_refresh__, m: module } = __turbopack_context__;
 {
 __turbopack_context__.s({
+    "addCustomSubject": (()=>addCustomSubject),
     "addStudentsToClassroom": (()=>addStudentsToClassroom),
     "archiveClassroom": (()=>archiveClassroom),
     "createClassroom": (()=>createClassroom),
     "createReportCard": (()=>createReportCard),
     "createStudent": (()=>createStudent),
+    "deleteCustomSubject": (()=>deleteCustomSubject),
+    "deleteReportCard": (()=>deleteReportCard),
     "deleteStudent": (()=>deleteStudent),
     "fetchArchivedClassrooms": (()=>fetchArchivedClassrooms),
     "fetchClassroomById": (()=>fetchClassroomById),
     "fetchClassroomStudents": (()=>fetchClassroomStudents),
     "fetchClassrooms": (()=>fetchClassrooms),
+    "fetchCustomSubjects": (()=>fetchCustomSubjects),
+    "fetchReportCardScores": (()=>fetchReportCardScores),
     "fetchReportCards": (()=>fetchReportCards),
     "fetchStudent": (()=>fetchStudent),
     "fetchStudents": (()=>fetchStudents),
     "removeStudentFromClassroom": (()=>removeStudentFromClassroom),
+    "saveReportCardScores": (()=>saveReportCardScores),
+    "sendReportCardSMS": (()=>sendReportCardSMS),
     "unarchiveClassroom": (()=>unarchiveClassroom),
     "updateClassroom": (()=>updateClassroom),
     "updateStudent": (()=>updateStudent)
@@ -221,7 +228,7 @@ const addStudentsToClassroom = async (classroomId, studentIds)=>{
             studentIds
         })
     });
-    if (!res.ok) throw new Error("Failed to add students to classroom");
+    if (!res.ok) throw await res.json();
     return res.json();
 };
 const removeStudentFromClassroom = async (classroomId, studentId)=>{
@@ -233,14 +240,14 @@ const removeStudentFromClassroom = async (classroomId, studentId)=>{
     return res.json();
 };
 const fetchReportCards = async (classroomId)=>{
-    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/report-cards`, {
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
         headers: getAuthHeaders()
     });
     if (!res.ok) throw new Error("Failed to fetch report cards");
     return res.json();
 };
 const createReportCard = async (classroomId, title)=>{
-    const res = await fetch(`${BASE_URL}/classrooms/${classroomId}/report-cards`, {
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
         method: "POST",
         headers: Object.assign({
             "Content-Type": "application/json"
@@ -252,6 +259,82 @@ const createReportCard = async (classroomId, title)=>{
     if (!res.ok) throw new Error("Failed to create report card");
     return res.json();
 };
+const deleteReportCard = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to delete report card");
+    return res.json();
+};
+const saveReportCardScores = async (reportCardId, // eslint-disable-next-line @typescript-eslint/no-explicit-any
+scores)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            scores
+        })
+    });
+    if (!res.ok) throw new Error("Failed to save report card scores");
+    return res.json();
+};
+const fetchReportCardScores = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report card scores");
+    return res.json();
+};
+const sendReportCardSMS = async (reportCardId, studentIds)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/send-sms`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            studentIds
+        })
+    });
+    if (!res.ok) throw new Error("Failed to send SMS");
+    return res.json();
+};
+async function fetchCustomSubjects(token) {
+    const res = await fetch("/api/user-subjects", {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+    return res.json();
+}
+async function addCustomSubject(token, subject) {
+    const res = await fetch("/api/user-subjects", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            subject
+        })
+    });
+    return res.json();
+}
+async function deleteCustomSubject(token, subject) {
+    const res = await fetch("/api/user-subjects", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+            subject
+        })
+    });
+    return res.json();
+}
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(module, globalThis.$RefreshHelpers$);
 }

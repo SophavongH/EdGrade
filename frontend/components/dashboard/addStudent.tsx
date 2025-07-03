@@ -55,7 +55,7 @@ export default function AddStudentModal({
       if (result.alreadyAdded && result.alreadyAdded.length > 0) {
         setAlreadyAdded(result.alreadyAdded);
         setError(
-          `សិស្សខាងក្រោមត្រូវបានបញ្ចូលរួចហើយ៖ ${result.alreadyAdded.map(s => s.name).join(", ")}`
+          `The Student is already added៖ ${result.alreadyAdded.map(s => s.name).join(", ")}`
         );
       } else {
         onClose();
@@ -63,7 +63,7 @@ export default function AddStudentModal({
     
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
-      setError(err?.error || "បញ្ចូលសិស្សបរាជ័យ");
+      setError(err?.error || "Successfully added students");
     }
     setLoading(false);
   };
@@ -90,7 +90,7 @@ export default function AddStudentModal({
             className="text-2xl font-bold text-[#25388C] text-center"
             style={{ fontFamily: "inherit", letterSpacing: 1 }}
           >
-            បញ្ចូលសិស្ស
+            Add Students
           </h2>
         </div>
         {/* Search box */}
@@ -100,7 +100,7 @@ export default function AddStudentModal({
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              placeholder="ស្វែងរកសិស្ស..."
+              placeholder="Searching Student..."
               className="w-full rounded-lg border border-gray-300 px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-[#25388C] text-base"
             />
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
@@ -176,7 +176,7 @@ export default function AddStudentModal({
             onClick={handleAdd}
             disabled={loading || selected.length === 0}
           >
-            {loading ? "កំពុងបញ្ចូល..." : "បញ្ចូល"}
+            {loading ? "Adding..." : "Add"}
           </Button>
         </div>
       </div>

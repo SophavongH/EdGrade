@@ -72,15 +72,21 @@ __turbopack_context__.s({
     "addStudentsToClassroom": (()=>addStudentsToClassroom),
     "archiveClassroom": (()=>archiveClassroom),
     "createClassroom": (()=>createClassroom),
+    "createReportCard": (()=>createReportCard),
     "createStudent": (()=>createStudent),
+    "deleteReportCard": (()=>deleteReportCard),
     "deleteStudent": (()=>deleteStudent),
     "fetchArchivedClassrooms": (()=>fetchArchivedClassrooms),
     "fetchClassroomById": (()=>fetchClassroomById),
     "fetchClassroomStudents": (()=>fetchClassroomStudents),
     "fetchClassrooms": (()=>fetchClassrooms),
+    "fetchReportCardScores": (()=>fetchReportCardScores),
+    "fetchReportCards": (()=>fetchReportCards),
     "fetchStudent": (()=>fetchStudent),
     "fetchStudents": (()=>fetchStudents),
     "removeStudentFromClassroom": (()=>removeStudentFromClassroom),
+    "saveReportCardScores": (()=>saveReportCardScores),
+    "sendReportCardSMS": (()=>sendReportCardSMS),
     "unarchiveClassroom": (()=>unarchiveClassroom),
     "updateClassroom": (()=>updateClassroom),
     "updateStudent": (()=>updateStudent)
@@ -219,7 +225,7 @@ const addStudentsToClassroom = async (classroomId, studentIds)=>{
             studentIds
         })
     });
-    if (!res.ok) throw new Error("Failed to add students to classroom");
+    if (!res.ok) throw await res.json();
     return res.json();
 };
 const removeStudentFromClassroom = async (classroomId, studentId)=>{
@@ -228,6 +234,68 @@ const removeStudentFromClassroom = async (classroomId, studentId)=>{
         headers: getAuthHeaders()
     });
     if (!res.ok) throw new Error("Failed to remove student from classroom");
+    return res.json();
+};
+const fetchReportCards = async (classroomId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report cards");
+    return res.json();
+};
+const createReportCard = async (classroomId, title)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/classrooms/${classroomId}/report-cards`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            title
+        })
+    });
+    if (!res.ok) throw new Error("Failed to create report card");
+    return res.json();
+};
+const deleteReportCard = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}`, {
+        method: "DELETE",
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to delete report card");
+    return res.json();
+};
+const saveReportCardScores = async (reportCardId, // eslint-disable-next-line @typescript-eslint/no-explicit-any
+scores)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            scores
+        })
+    });
+    if (!res.ok) throw new Error("Failed to save report card scores");
+    return res.json();
+};
+const fetchReportCardScores = async (reportCardId)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/scores`, {
+        headers: getAuthHeaders()
+    });
+    if (!res.ok) throw new Error("Failed to fetch report card scores");
+    return res.json();
+};
+const sendReportCardSMS = async (reportCardId, studentIds)=>{
+    const res = await fetch(`${BASE_URL}/report-cards/${reportCardId}/send-sms`, {
+        method: "POST",
+        headers: Object.assign({
+            "Content-Type": "application/json"
+        }, getAuthHeaders()),
+        body: JSON.stringify({
+            studentIds
+        })
+    });
+    if (!res.ok) throw new Error("Failed to send SMS");
     return res.json();
 };
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
@@ -356,10 +424,13 @@ function EditStudentPage() {
                         className: "w-36 h-36 rounded-full bg-orange-200 flex items-center justify-center cursor-pointer mb-6 overflow-hidden",
                         onClick: ()=>document.getElementById("avatarInput")?.click(),
                         children: [
-                            image ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                            image ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 src: image,
                                 alt: "Profile",
-                                className: "w-full h-full object-cover"
+                                className: "w-full h-full object-cover",
+                                width: 144,
+                                height: 144,
+                                unoptimized: true
                             }, void 0, false, {
                                 fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
                                 lineNumber: 82,
@@ -369,7 +440,7 @@ function EditStudentPage() {
                                 children: "+"
                             }, void 0, false, {
                                 fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                                lineNumber: 84,
+                                lineNumber: 91,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -380,7 +451,7 @@ function EditStudentPage() {
                                 onChange: handleImageChange
                             }, void 0, false, {
                                 fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                                lineNumber: 86,
+                                lineNumber: 93,
                                 columnNumber: 11
                             }, this)
                         ]
@@ -394,11 +465,11 @@ function EditStudentPage() {
                         value: form.name,
                         onChange: handleChange,
                         className: "w-full rounded border px-4 py-2",
-                        placeholder: "ឈ្មោះ",
+                        placeholder: "Name",
                         required: true
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                        lineNumber: 95,
+                        lineNumber: 102,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -407,10 +478,10 @@ function EditStudentPage() {
                         value: form.dob,
                         onChange: handleChange,
                         className: "w-full rounded border px-4 py-2",
-                        placeholder: "ថ្ងៃខែឆ្នាំកំណើត"
+                        placeholder: "Date of Birth"
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                        lineNumber: 103,
+                        lineNumber: 110,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -425,29 +496,29 @@ function EditStudentPage() {
                                 children: "Select"
                             }, void 0, false, {
                                 fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                                lineNumber: 118,
+                                lineNumber: 125,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                 value: "male",
-                                children: "ប្រុស"
+                                children: "Male"
                             }, void 0, false, {
                                 fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                                lineNumber: 119,
+                                lineNumber: 126,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
                                 value: "female",
-                                children: "ស្រី"
+                                children: "Female"
                             }, void 0, false, {
                                 fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                                lineNumber: 120,
+                                lineNumber: 127,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                        lineNumber: 111,
+                        lineNumber: 118,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -455,10 +526,10 @@ function EditStudentPage() {
                         value: form.address,
                         onChange: handleChange,
                         className: "w-full rounded border px-4 py-2",
-                        placeholder: "អាសយដ្ឋាន"
+                        placeholder: "Adress"
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                        lineNumber: 122,
+                        lineNumber: 129,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -466,21 +537,21 @@ function EditStudentPage() {
                         value: form.parentPhone,
                         onChange: handleChange,
                         className: "w-full rounded border px-4 py-2",
-                        placeholder: "លេខទូរស័ព្ទមាតាបិតា",
+                        placeholder: "Parent's Phone Number",
                         required: true
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                        lineNumber: 129,
+                        lineNumber: 136,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
                         type: "submit",
                         className: "w-full bg-[#25388C] hover:bg-[#1e2e6d] text-white text-lg",
                         disabled: loading,
-                        children: loading ? "កំពុងកែប្រែ..." : "កែប្រែ"
+                        children: loading ? "Editing..." : "Edit"
                     }, void 0, false, {
                         fileName: "[project]/app/(dashboard)/school/student/[id]/editStudents/page.tsx",
-                        lineNumber: 137,
+                        lineNumber: 144,
                         columnNumber: 9
                     }, this)
                 ]

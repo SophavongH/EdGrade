@@ -31,7 +31,9 @@ var { g: global, __dirname } = __turbopack_context__;
 {
 __turbopack_context__.s({
     "FIELD_NAME": (()=>FIELD_NAME),
-    "FIELD_TYPES": (()=>FIELD_TYPES)
+    "FIELD_TYPES": (()=>FIELD_TYPES),
+    "adminSideBarLinks": (()=>adminSideBarLinks),
+    "superAdminSideBarLinks": (()=>superAdminSideBarLinks)
 });
 const FIELD_NAME = {
     email: 'Email',
@@ -41,6 +43,35 @@ const FIELD_TYPES = {
     email: 'email',
     password: 'password'
 };
+const adminSideBarLinks = [
+    {
+        img: "/icons/admin/home.svg",
+        route: "/school",
+        text: "Home"
+    },
+    {
+        img: "/icons/admin/users.svg",
+        route: "/school/student",
+        text: "All Students"
+    },
+    {
+        img: "/icons/admin/book.svg",
+        route: "/school/classrooms",
+        text: "All Classrooms"
+    },
+    {
+        img: "/icons/admin/bookmark.svg",
+        route: "/school/archived",
+        text: "Archive Classrooms"
+    }
+];
+const superAdminSideBarLinks = [
+    {
+        img: "/icons/admin/home.svg",
+        route: "/admin",
+        text: "Home"
+    }
+];
 }}),
 "[project]/lib/utils.ts [app-ssr] (ecmascript)": ((__turbopack_context__) => {
 "use strict";
@@ -341,17 +372,11 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$dist$
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$zod$2f$dist$2f$esm$2f$v3$2f$external$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__$2a$__as__z$3e$__ = __turbopack_context__.i("[project]/node_modules/zod/dist/esm/v3/external.js [app-ssr] (ecmascript) <export * as z>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/sonner/dist/index.mjs [app-ssr] (ecmascript)");
-(()=>{
-    const e = new Error("Cannot find module '../../auth'");
-    e.code = 'MODULE_NOT_FOUND';
-    throw e;
-})();
 var __TURBOPACK__imported__module__$5b$project$5d2f$constants$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/constants.ts [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$input$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/input.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/button.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/components/ui/form.tsx [app-ssr] (ecmascript)");
-'use client';
-;
+"use client";
 ;
 ;
 ;
@@ -371,17 +396,52 @@ function AuthForm() {
     const form = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$hook$2d$form$2f$dist$2f$index$2e$esm$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useForm"])({
         resolver: (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$hookform$2f$resolvers$2f$zod$2f$dist$2f$zod$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["zodResolver"])(loginSchema),
         defaultValues: {
-            email: '',
-            password: ''
+            email: "",
+            password: ""
         }
     });
     const onSubmit = async (data)=>{
-        const result = await login(data.email, data.password);
-        if (result.success) {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success('Login successful');
-            router.push(result.role === 'admin' ? '/admin' : '/school');
+        // Clear previous errors
+        form.clearErrors();
+        // Call the login API directly to get the status code
+        const res = await fetch(`${("TURBOPACK compile-time value", "http://localhost:4000")}/api/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: data.email,
+                password: data.password
+            })
+        });
+        if (res.status === 403) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error("គណនីរបស់អ្នកត្រូវបានផ្អាក។ សូមទាក់ទងអ្នកគ្រប់គ្រង។");
+            return;
+        }
+        const result = await res.json();
+        if (res.ok && result.success) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].success("Login successful");
+            // Save token if needed
+            if (result.token) localStorage.setItem("token", result.token);
+            // Redirect based on role
+            if (result.role === "admin") {
+                router.push("/admin");
+            } else {
+                router.push("/school");
+            }
         } else {
-            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error(result.error);
+            // Set error on the correct field
+            if (result.error?.toLowerCase().includes("email")) {
+                form.setError("email", {
+                    message: result.error
+                });
+            } else if (result.error?.toLowerCase().includes("password")) {
+                form.setError("password", {
+                    message: result.error
+                });
+            } else {
+                __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$sonner$2f$dist$2f$index$2e$mjs__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["toast"].error(result.error || "Login failed");
+            }
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Form"], {
@@ -399,7 +459,7 @@ function AuthForm() {
                                         children: __TURBOPACK__imported__module__$5b$project$5d2f$constants$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FIELD_NAME"][field.name]
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/AuthForm.tsx",
-                                        lineNumber: 54,
+                                        lineNumber: 87,
                                         columnNumber: 17
                                     }, void 0),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormControl"], {
@@ -408,28 +468,28 @@ function AuthForm() {
                                             ...field
                                         }, void 0, false, {
                                             fileName: "[project]/components/ui/AuthForm.tsx",
-                                            lineNumber: 56,
+                                            lineNumber: 91,
                                             columnNumber: 19
                                         }, void 0)
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/AuthForm.tsx",
-                                        lineNumber: 55,
+                                        lineNumber: 90,
                                         columnNumber: 17
                                     }, void 0),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$form$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["FormMessage"], {}, void 0, false, {
                                         fileName: "[project]/components/ui/AuthForm.tsx",
-                                        lineNumber: 61,
+                                        lineNumber: 96,
                                         columnNumber: 17
                                     }, void 0)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ui/AuthForm.tsx",
-                                lineNumber: 53,
+                                lineNumber: 86,
                                 columnNumber: 15
                             }, void 0)
                     }, field, false, {
                         fileName: "[project]/components/ui/AuthForm.tsx",
-                        lineNumber: 48,
+                        lineNumber: 81,
                         columnNumber: 11
                     }, this)),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Button"], {
@@ -437,18 +497,18 @@ function AuthForm() {
                     children: "Log in"
                 }, void 0, false, {
                     fileName: "[project]/components/ui/AuthForm.tsx",
-                    lineNumber: 66,
+                    lineNumber: 101,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/ui/AuthForm.tsx",
-            lineNumber: 46,
+            lineNumber: 79,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/ui/AuthForm.tsx",
-        lineNumber: 45,
+        lineNumber: 78,
         columnNumber: 5
     }, this);
 }
@@ -467,27 +527,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$AuthForm
 ;
 ;
 const login = ()=>{
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "max-w-md mx-auto mt-24 p-6 border rounded",
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                className: "text-2xl font-bold mb-4",
-                children: "Login"
-            }, void 0, false, {
-                fileName: "[project]/app/(auth)/login/page.tsx",
-                lineNumber: 8,
-                columnNumber: 7
-            }, this),
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$AuthForm$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
-                fileName: "[project]/app/(auth)/login/page.tsx",
-                lineNumber: 9,
-                columnNumber: 7
-            }, this)
-        ]
-    }, void 0, true, {
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$AuthForm$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
         fileName: "[project]/app/(auth)/login/page.tsx",
-        lineNumber: 7,
-        columnNumber: 5
+        lineNumber: 8,
+        columnNumber: 7
     }, this);
 };
 const __TURBOPACK__default__export__ = login;
