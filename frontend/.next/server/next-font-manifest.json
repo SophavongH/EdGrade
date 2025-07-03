@@ -1,88 +1,39 @@
 {
   "app": {
-    "[project]/app/(auth)/login/page": [
-      "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
-    ],
-    "[project]/app/(dashboard)/admin/edit/[id]/page": [
-      "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
-    ],
-    "[project]/app/(dashboard)/admin/new/page": [
-      "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
-    ],
-    "[project]/app/(dashboard)/admin/page": [
-      "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
-    ],
     "[project]/app/(dashboard)/school/classrooms/[id]/page": [
       "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
       "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
       "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
+      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf",
+      "static/media/BebasNeue_Regular-s.p.832d4418.ttf"
     ],
     "[project]/app/(dashboard)/school/classrooms/[id]/report-cards/[reportCardId]/page": [
       "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
       "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
       "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
+      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf",
+      "static/media/BebasNeue_Regular-s.p.832d4418.ttf"
     ],
     "[project]/app/(dashboard)/school/classrooms/page": [
       "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
       "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
+      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
+      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf",
+      "static/media/BebasNeue_Regular-s.p.832d4418.ttf"
     ],
     "[project]/app/(dashboard)/school/page": [
       "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
       "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
       "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
+      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf",
+      "static/media/BebasNeue_Regular-s.p.832d4418.ttf"
     ],
     "[project]/app/(dashboard)/school/student/page": [
       "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
       "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
       "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
-    ],
-    "[project]/app/_not-found/page": [
-      "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
-    ],
-    "[project]/app/page": [
-      "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
-    ],
-    "[project]/app/report/[token]/page": [
-      "static/media/IBMPlexSans_SemiBold-s.p.baea7d98.ttf",
-      "static/media/IBMPlexSans_Bold-s.p.8e491a59.ttf",
-      "static/media/IBMPlexSans_Medium-s.p.158b7459.ttf",
-      "static/media/BebasNeue_Regular-s.p.832d4418.ttf",
-      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf"
+      "static/media/IBMPlexSans_Regular-s.p.f7f20c9f.ttf",
+      "static/media/BebasNeue_Regular-s.p.832d4418.ttf"
     ]
   },
   "appUsingSizeAdjust": true,
