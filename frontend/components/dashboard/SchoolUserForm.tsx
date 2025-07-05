@@ -37,7 +37,7 @@ export default function SchoolUserForm({
       }
       onSubmit({ name, email, password });
     } else {
-      onSubmit({ name, email });
+      onSubmit({ name, email, password });
     }
   };
 
