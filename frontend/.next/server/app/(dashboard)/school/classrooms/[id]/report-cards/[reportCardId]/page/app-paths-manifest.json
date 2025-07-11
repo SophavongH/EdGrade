@@ -1,3 +1,0 @@
-{
-  "/(dashboard)/school/classrooms/[id]/report-cards/[reportCardId]/page": "app/(dashboard)/school/classrooms/[id]/report-cards/[reportCardId]/page.js"
-}

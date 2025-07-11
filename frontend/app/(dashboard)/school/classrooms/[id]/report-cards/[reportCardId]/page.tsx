@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import {
   fetchClassroomStudents,
@@ -12,21 +12,8 @@ import {
   deleteCustomSubject,
 } from "@/lib/api";
 import { useParams } from "next/navigation";
-
-const DEFAULT_SUBJECTS = [
-  "Khmer Literature",
-  "Mathematics",
-  "Chemistry",
-  "Physics",
-  "Biology",
-  "History",
-];
-
-type Student = {
-  id: string;
-  name: string;
-  avatar?: string;
-};
+import type { Student } from "@/types/student";
+import { useLanguage } from "@/lib/LanguageProvider";
 
 type ReportCard = {
   id: string | number;
@@ -36,7 +23,7 @@ type ReportCard = {
 type StudentScores = {
   [studentId: string]: {
     absent: string;
-    [subject: string]: string; // subject scores
+    [subjectKey: string]: string; // subject scores by key
     total: string;
     average: string;
     grade: string;
@@ -44,15 +31,29 @@ type StudentScores = {
   };
 };
 
+// Fixed subject keys
+const SUBJECT_KEYS = [
+  "khmerLiterature",
+  "mathematics",
+  "biology",
+  "chemistry",
+  "physics",
+  "history",
+  // ...add all your subject keys here
+];
+
 export default function ReportCardDetailPage() {
   const params = useParams();
   const classroomId = params.id as string;
   const reportCardId = params.reportCardId as string;
+  const { t } = useLanguage();
+
+  // For subject selection modal, show translated names
+  const DEFAULT_SUBJECTS = useMemo(() => SUBJECT_KEYS, []);
 
   const [students, setStudents] = useState<Student[]>([]);
   const [showSubjectModal, setShowSubjectModal] = useState(false);
-  const [selectedSubjects, setSelectedSubjects] =
-    useState<string[]>(DEFAULT_SUBJECTS);
+  const [selectedSubjects, setSelectedSubjects] = useState<string[]>(DEFAULT_SUBJECTS);
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -68,21 +69,20 @@ export default function ReportCardDetailPage() {
   // Fetch students
   useEffect(() => {
     if (!classroomId || isNaN(Number(classroomId))) {
-      setError("Invalid classroom ID.");
+      setError(t("invalidClassroomId"));
       return;
     }
     setError(null);
     fetchClassroomStudents(classroomId)
       .then((data) => {
         setStudents(data);
-        // Initialize scores state for each student if not already set
         setScores((prev) => {
           const newScores = { ...prev };
           data.forEach((stu: Student) => {
             if (!newScores[stu.id]) {
               newScores[stu.id] = {
                 absent: "",
-                ...Object.fromEntries(DEFAULT_SUBJECTS.map((s) => [s, ""])),
+                ...Object.fromEntries(DEFAULT_SUBJECTS.map((key) => [key, ""])),
                 total: "",
                 average: "",
                 grade: "",
@@ -93,8 +93,8 @@ export default function ReportCardDetailPage() {
           return newScores;
         });
       })
-      .catch(() => setError("Failed to fetch students for this classroom."));
-  }, [classroomId]);
+      .catch(() => setError(t("failedToFetchStudents")));
+  }, [classroomId, t, DEFAULT_SUBJECTS]);
 
   // Fetch report card info for title
   useEffect(() => {
@@ -114,9 +114,7 @@ export default function ReportCardDetailPage() {
       .then((data) => {
         setScores((prev) => ({ ...prev, ...data }));
       })
-      .catch(() => {
-        // Optionally handle error
-      });
+      .catch(() => {});
   }, [reportCardId]);
 
   // Fetch custom subjects from backend
@@ -136,11 +134,11 @@ export default function ReportCardDetailPage() {
   }, [selectAll, students]);
 
   // Handle subject selection
-  const handleSubjectChange = (subject: string) => {
+  const handleSubjectChange = (subjectKey: string) => {
     setSelectedSubjects((prev) =>
-      prev.includes(subject)
-        ? prev.filter((s) => s !== subject)
-        : [...prev, subject]
+      prev.includes(subjectKey)
+        ? prev.filter((s) => s !== subjectKey)
+        : [...prev, subjectKey]
     );
   };
 
@@ -168,21 +166,21 @@ export default function ReportCardDetailPage() {
 
   // Add new subject handler (API)
   const handleAddSubject = async () => {
-    const subject = newSubject.trim();
+    const subjectKey = newSubject.trim();
     if (
-      subject &&
-      !selectedSubjects.includes(subject) &&
-      !DEFAULT_SUBJECTS.includes(subject) &&
-      !customSubjects.includes(subject)
+      subjectKey &&
+      !selectedSubjects.includes(subjectKey) &&
+      !DEFAULT_SUBJECTS.includes(subjectKey) &&
+      !customSubjects.includes(subjectKey)
     ) {
       setSubjectLoading(true);
       try {
-        await addCustomSubject(subject);
-        setCustomSubjects((prev) => [...prev, subject]);
-        setSelectedSubjects((prev) => [...prev, subject]);
+        await addCustomSubject(subjectKey);
+        setCustomSubjects((prev) => [...prev, subjectKey]);
+        setSelectedSubjects((prev) => [...prev, subjectKey]);
         setNewSubject("");
       } catch {
-        alert("Failed to add subject.");
+        alert(t("failedToAddSubject"));
       } finally {
         setSubjectLoading(false);
       }
@@ -190,14 +188,14 @@ export default function ReportCardDetailPage() {
   };
 
   // Remove custom subject handler (API)
-  const handleRemoveCustomSubject = async (subject: string) => {
+  const handleRemoveCustomSubject = async (subjectKey: string) => {
     setSubjectLoading(true);
     try {
-      await deleteCustomSubject(subject);
-      setCustomSubjects((prev) => prev.filter((s) => s !== subject));
-      setSelectedSubjects((prev) => prev.filter((s) => s !== subject));
+      await deleteCustomSubject(subjectKey);
+      setCustomSubjects((prev) => prev.filter((s) => s !== subjectKey));
+      setSelectedSubjects((prev) => prev.filter((s) => s !== subjectKey));
     } catch {
-      alert("Failed to remove subject.");
+      alert(t("failedToRemoveSubject"));
     } finally {
       setSubjectLoading(false);
     }
@@ -207,11 +205,10 @@ export default function ReportCardDetailPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Compute totals, averages, and ranks before saving
       const tableSubjects = [...selectedSubjects];
       const totals = students.map((stu) =>
-        tableSubjects.reduce((sum, subject) => {
-          const val = Number(scores[stu.id]?.[subject] || 0);
+        tableSubjects.reduce((sum, subjectKey) => {
+          const val = Number(scores[stu.id]?.[subjectKey] || 0);
           return sum + (isNaN(val) ? 0 : val);
         }, 0)
       );
@@ -231,9 +228,7 @@ export default function ReportCardDetailPage() {
       }
 
       // Build the payload with computed fields
-      
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const payload: Record<string, any> = {};
+      const payload: Record<string, StudentScores[string]> = {};
       students.forEach((stu, idx) => {
         const total = totals[idx];
         const average =
@@ -250,10 +245,9 @@ export default function ReportCardDetailPage() {
       });
 
       await saveReportCardScores(reportCardId, payload);
-      alert("Successfully saved scores!");
-      // eslint-disable-next-line
-    } catch (err) {
-      alert("Failed to save scores.");
+      alert(t("successfullySavedScores"));
+    } catch {
+      alert(t("failedToSaveScores"));
     } finally {
       setSaving(false);
     }
@@ -266,21 +260,21 @@ export default function ReportCardDetailPage() {
     <section className="w-full rounded-2xl bg-white p-7">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold">
-          {reportCard?.title || "តារាពិន្ទុ"}
+          {reportCard?.title || t("reportCard")}
         </h1>
         <div className="flex gap-2">
           <Button
             className="bg-[#25388C] hover:bg-[#1e2e6d] text-white"
             onClick={() => setShowSubjectModal(true)}
           >
-            Select Subjects
+            {t("selectSubjects")}
           </Button>
           <Button
             className="bg-[#25388C] hover:bg-[#1e2e6d] text-white"
             onClick={handleSave}
             disabled={saving}
           >
-            {saving ? "Saving..." : "Save"}
+            {saving ? t("saving") : t("save")}
           </Button>
         </div>
       </div>
@@ -296,35 +290,30 @@ export default function ReportCardDetailPage() {
                   onChange={() => setSelectAll((v) => !v)}
                 />
               </th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Absent</th>
-              {tableSubjects.map((subject) => (
-                <th key={subject} className="px-4 py-3">
-                  {subject}
+              <th className="px-4 py-3">{t("name")}</th>
+              <th className="px-4 py-3">{t("absent")}</th>
+              {tableSubjects.map((subjectKey) => (
+                <th key={subjectKey} className="px-4 py-3">
+                  {t(subjectKey)}
                 </th>
               ))}
-              <th className="px-4 py-3">Total</th>
-              <th className="px-4 py-3">Average</th>
-              <th className="px-4 py-3">Grade</th>
-              <th className="px-4 py-3">Ranking</th>
+              <th className="px-4 py-3">{t("total")}</th>
+              <th className="px-4 py-3">{t("average")}</th>
+              <th className="px-4 py-3">{t("grade")}</th>
+              <th className="px-4 py-3">{t("ranking")}</th>
             </tr>
           </thead>
           <tbody>
             {(() => {
-              // Calculate totals for all students
               const totals = students.map((stu) =>
-                tableSubjects.reduce((sum, subject) => {
-                  const val = Number(scores[stu.id]?.[subject] || 0);
+                tableSubjects.reduce((sum, subjectKey) => {
+                  const val = Number(scores[stu.id]?.[subjectKey] || 0);
                   return sum + (isNaN(val) ? 0 : val);
                 }, 0)
               );
-
-              // Prepare ranking: sort totals descending, keep track of original indices
               const sortedTotals = [...totals]
                 .map((total, idx) => ({ total, idx }))
                 .sort((a, b) => b.total - a.total);
-
-              // Assign ranks, handling ties
               const ranks: number[] = Array(students.length).fill(0);
               let currentRank = 1;
               for (let i = 0; i < sortedTotals.length; i++) {
@@ -338,7 +327,6 @@ export default function ReportCardDetailPage() {
                 }
                 currentRank++;
               }
-
               return students.map((stu, idx) => {
                 const total = totals[idx];
                 const average =
@@ -346,7 +334,6 @@ export default function ReportCardDetailPage() {
                     ? (total / tableSubjects.length).toFixed(2)
                     : "0";
                 const rank = ranks[idx];
-
                 return (
                   <tr key={stu.id} className="border-b">
                     <td className="px-4 py-2">
@@ -367,14 +354,14 @@ export default function ReportCardDetailPage() {
                         }
                       />
                     </td>
-                    {tableSubjects.map((subject) => (
-                      <td key={subject} className="px-4 py-2 text-center">
+                    {tableSubjects.map((subjectKey) => (
+                      <td key={subjectKey} className="px-4 py-2 text-center">
                         <input
                           type="text"
                           className="w-16 border rounded px-1 py-0.5 text-center"
-                          value={scores[stu.id]?.[subject] || ""}
+                          value={scores[stu.id]?.[subjectKey] || ""}
                           onChange={(e) =>
-                            handleScoreChange(stu.id, subject, e.target.value)
+                            handleScoreChange(stu.id, subjectKey, e.target.value)
                           }
                         />
                       </td>
@@ -416,13 +403,13 @@ export default function ReportCardDetailPage() {
                 ? selectedStudentIds
                 : students.map((s) => s.id)
             );
-            alert("SMS sent to parents!");
+            alert(t("smsSentToParents"));
           } catch {
-            alert("Failed to send SMS");
+            alert(t("failedToSendSMS"));
           }
         }}
       >
-        Send
+        {t("send")}
       </Button>
       {/* Subject Selection Modal */}
       {showSubjectModal && (
@@ -435,23 +422,23 @@ export default function ReportCardDetailPage() {
               ×
             </button>
             <div className="font-bold text-lg text-center mb-6">
-              Select Subjects
+              {t("selectSubjects")}
             </div>
             <div className="flex flex-col gap-2 mb-4">
-              {[...DEFAULT_SUBJECTS, ...customSubjects].map((subject) => (
-                <label key={subject} className="flex items-center gap-2">
+              {[...DEFAULT_SUBJECTS, ...customSubjects].map((subjectKey) => (
+                <label key={subjectKey} className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    checked={selectedSubjects.includes(subject)}
-                    onChange={() => handleSubjectChange(subject)}
+                    checked={selectedSubjects.includes(subjectKey)}
+                    onChange={() => handleSubjectChange(subjectKey)}
                   />
-                  <span>{subject}</span>
-                  {customSubjects.includes(subject) && (
+                  <span>{t(subjectKey)}</span>
+                  {customSubjects.includes(subjectKey) && (
                     <button
                       type="button"
                       className="ml-2 text-xs text-red-400 hover:text-red-600"
-                      onClick={() => handleRemoveCustomSubject(subject)}
-                      title="Remove custom subject"
+                      onClick={() => handleRemoveCustomSubject(subjectKey)}
+                      title={t("removeCustomSubject")}
                       disabled={subjectLoading}
                     >
                       ×
@@ -466,7 +453,7 @@ export default function ReportCardDetailPage() {
                 type="text"
                 value={newSubject}
                 onChange={(e) => setNewSubject(e.target.value)}
-                placeholder="Add new subject"
+                placeholder={t("addNewSubject")}
                 className="flex-1 border rounded px-2 py-1"
               />
               <button
@@ -475,14 +462,14 @@ export default function ReportCardDetailPage() {
                 onClick={handleAddSubject}
                 disabled={subjectLoading}
               >
-                {subjectLoading ? "Adding..." : "Add"}
+                {subjectLoading ? t("adding") : t("add")}
               </button>
             </div>
             <Button
               className="w-full bg-[#25388C] hover:bg-[#1e2e6d] text-white"
               onClick={() => setShowSubjectModal(false)}
             >
-              Done
+              {t("done")}
             </Button>
           </div>
         </div>

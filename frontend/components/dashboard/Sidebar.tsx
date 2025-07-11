@@ -10,9 +10,11 @@ import type { Session } from "@/lib/user";
 import { usePathname } from "next/navigation";
 import { superAdminSideBarLinks } from "@/constants";
 import ProfileMenuUp from "./profileMenuUp";
+import { useLanguage } from "@/lib/LanguageProvider";
 
 const Sidebar = ({ session }: { session: Session }) => {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   return (
     <div className="sticky left-0 top-0 flex h-dvh flex-col justify-between bg-white px-5 pb-5 pt-10 max-md:w-20 max-md:px-2">
@@ -53,7 +55,7 @@ const Sidebar = ({ session }: { session: Session }) => {
                 >
                   <Image
                     src={link.img}
-                    alt={link.text}
+                    alt={t(link.text)}
                     width={20}
                     height={20}
                     className={isSelected ? "brightness-0 invert" : ""}
@@ -67,13 +69,22 @@ const Sidebar = ({ session }: { session: Session }) => {
       </div>
 
       {/* User Profile Section */}
-      <div className="w-full flex justify-center mt-8">
-        <div className="flex items-center gap-3 rounded-2xl bg-white shadow-lg px-4 py-3 border border-gray-100 w-[95%] mx-auto transition-all duration-150">
+      <div className="w-full flex flex-col items-center">
+        {/* ChevronUp (ProfileMenuUp) - show above user info on mobile, right in row on desktop */}
+        <div className="w-full flex justify-center md:hidden mb-2">
+          <ProfileMenuUp
+            name={session?.user?.name}
+            email={session?.user?.email}
+          />
+        </div>
+        <div className="flex items-center gap-3 rounded-[32px] bg-white shadow px-4 py-2 border border-gray-100 w-[95%] mx-auto">
           {/* Avatar */}
           <div className="relative">
             <Avatar className="h-9 w-9">
               <AvatarFallback className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-base font-semibold text-black">
-                {getInitials(session?.user?.name || session?.user?.email || "IN")}
+                {getInitials(
+                  session?.user?.name || session?.user?.email || "IN"
+                )}
               </AvatarFallback>
             </Avatar>
           </div>
@@ -86,11 +97,13 @@ const Sidebar = ({ session }: { session: Session }) => {
               {session?.user?.email}
             </p>
           </div>
-          {/* Open menu button */}
-          <ProfileMenuUp
-            name={session?.user?.name}
-            email={session?.user?.email}
-          />
+          {/* ChevronUp (ProfileMenuUp) - show inline only on desktop */}
+          <div className="hidden md:block">
+            <ProfileMenuUp
+              name={session?.user?.name}
+              email={session?.user?.email}
+            />
+          </div>
         </div>
       </div>
     </div>

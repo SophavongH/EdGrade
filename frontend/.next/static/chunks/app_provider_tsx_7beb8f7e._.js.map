@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/hengs/Desktop/fyp/frontend/app/provider.tsx"],"sourcesContent":["\"use client\";\r\nimport { NextIntlClientProvider } from \"next-intl\";\r\nimport { useLocale, useMessages } from \"next-intl\";\r\n\r\nexport default function Providers({ children }: { children: React.ReactNode }) {\r\n  const locale = useLocale();\r\n  const messages = useMessages();\r\n\r\n  return (\r\n    <NextIntlClientProvider locale={locale} messages={messages}>\r\n      {children}\r\n    </NextIntlClientProvider>\r\n  );\r\n}"],"names":[],"mappings":";;;;AACA;AACA;;;AAFA;;;AAIe,SAAS,UAAU,EAAE,QAAQ,EAAiC;;IAC3E,MAAM,SAAS,CAAA,GAAA,qKAAA,CAAA,YAAS,AAAD;IACvB,MAAM,WAAW,CAAA,GAAA,qKAAA,CAAA,cAAW,AAAD;IAE3B,qBACE,6LAAC,sPAAA,CAAA,yBAAsB;QAAC,QAAQ;QAAQ,UAAU;kBAC/C;;;;;;AAGP;GATwB;;QACP,qKAAA,CAAA,YAAS;QACP,qKAAA,CAAA,cAAW;;;KAFN","debugId":null}}]
-}

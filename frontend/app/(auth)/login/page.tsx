@@ -1,13 +1,8 @@
-'use client'
-import AuthForm from '@/components/ui/AuthForm'
+"use client";
+import AuthForm from '@/components/ui/AuthForm';
 
+const Login = () => {
+  return <AuthForm />;
+};
 
-const login = () => {
-  return (
-    
-      <AuthForm />
-    
-  )
-}
-
-export default login
+export default Login;

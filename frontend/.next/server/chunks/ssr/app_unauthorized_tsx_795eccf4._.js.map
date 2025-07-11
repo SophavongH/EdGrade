@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 7, "column": 0}, "map": {"version":3,"sources":["file:///C:/Users/hengs/Desktop/fyp/frontend/app/unauthorized.tsx"],"sourcesContent":["export default function Unauthorized() {\r\n  return (\r\n    <div className=\"flex h-screen items-center justify-center text-2xl text-red-600\">\r\n      You are not authorized to access this page.\r\n    </div>\r\n  );\r\n}"],"names":[],"mappings":";;;;;AAAe,SAAS;IACtB,qBACE,8OAAC;QAAI,WAAU;kBAAkE;;;;;;AAIrF","debugId":null}}]
-}
