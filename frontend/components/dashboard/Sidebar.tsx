@@ -73,7 +73,7 @@ const Sidebar = ({ session }: { session: Session }) => {
         {/* ChevronUp (ProfileMenuUp) - show above user info on mobile, right in row on desktop */}
         <div className="w-full flex justify-center md:hidden mb-2">
           <ProfileMenuUp
-            name={session?.user?.name}
+            name={session?.user?.name ?? undefined}
             email={session?.user?.email}
           />
         </div>
@@ -81,11 +81,21 @@ const Sidebar = ({ session }: { session: Session }) => {
           {/* Avatar */}
           <div className="relative">
             <Avatar className="h-9 w-9">
-              <AvatarFallback className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-base font-semibold text-black">
-                {getInitials(
-                  session?.user?.name || session?.user?.email || "IN"
-                )}
-              </AvatarFallback>
+              {session?.user?.avatar ? (
+                <Image
+                  src={session.user.avatar}
+                  alt={session.user.name || session.user.email || "IN"}
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 rounded-full object-cover"
+                />
+              ) : (
+                <AvatarFallback className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-base font-semibold text-black">
+                  {getInitials(
+                    session?.user?.name || session?.user?.email || "IN"
+                  )}
+                </AvatarFallback>
+              )}
             </Avatar>
           </div>
           {/* User info */}
@@ -100,7 +110,7 @@ const Sidebar = ({ session }: { session: Session }) => {
           {/* ChevronUp (ProfileMenuUp) - show inline only on desktop */}
           <div className="hidden md:block">
             <ProfileMenuUp
-              name={session?.user?.name}
+              name={session?.user?.name ?? undefined}
               email={session?.user?.email}
             />
           </div>

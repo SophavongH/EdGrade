@@ -5,10 +5,11 @@ import authRoutes from "./routes/auth";
 import classroomRoutes from "./routes/classroom"; 
 import studentRoutes from "./routes/student";
 import { authenticateJWT } from "./routes/auth";
-import reportCardsRoutes from "./routes/reportCard";
+import reportCardRouter from "./routes/reportCard";
 import publicReportRoutes from "./routes/publicReport";
 import adminRoutes from "./routes/admin";
 import userSubjectsRouter from "./routes/userSubjects";
+import userRouter from "./routes/user";
 
 dotenv.config();
 
@@ -54,8 +55,9 @@ app.use("/api/auth", authRoutes);
 // Protected routes (require JWT)
 app.use("/api/classrooms", authenticateJWT, classroomRoutes);
 app.use("/api/students", authenticateJWT, studentRoutes);
-app.use("/api/report-cards", authenticateJWT, reportCardsRoutes);
+app.use("/api/report-cards", authenticateJWT, reportCardRouter);
 app.use("/api/admin", authenticateJWT, adminRoutes);
 app.use("/api/user-subjects", authenticateJWT, userSubjectsRouter);
+app.use("/api/user", authenticateJWT, userRouter);
 
 export default app;

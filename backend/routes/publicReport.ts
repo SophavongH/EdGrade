@@ -11,12 +11,38 @@ router.get("/report/:token", async (req, res) => {
     .select()
     .from(reportCardTokens)
     .where(eq(reportCardTokens.token, token));
-  if (!row) return res.status(404).json({ error: "Invalid or expired link" });
+  if (!row) return res.status(404).json({ error: "Invalid link" });
 
-  const [student] = await db.select().from(students).where(eq(students.id, row.studentId));
+  const [student] = await db
+    .select({
+      id: students.id,
+      student_id: students.studentId,
+      name: students.name,
+      gender: students.gender,
+      avatar: students.avatar,
+    })
+    .from(students)
+    .where(eq(students.id, row.studentId));
   const [reportCard] = await db.select().from(reportCards).where(eq(reportCards.id, row.reportCardId));
   const [score] = await db.select().from(reportCardScores)
     .where(and(eq(reportCardScores.reportCardId, row.reportCardId), eq(reportCardScores.studentId, row.studentId)));
+
+  // Use subjects from reportCard
+  const subjectsToShow = reportCard?.subjects || [];
+
+  // Filter scores to only selected subjects
+  let filteredScores: Record<string, unknown> = {};
+  if (score && subjectsToShow.length > 0) {
+    const scoresObj = score.scores as Record<string, unknown>;
+    for (const key of subjectsToShow) {
+      if (scoresObj[key] !== undefined) {
+        filteredScores[key] = scoresObj[key];
+      }
+    }
+    ["absent", "total", "average", "grade", "rank"].forEach((k) => {
+      if (scoresObj[k] !== undefined) filteredScores[k] = scoresObj[k];
+    });
+  }
 
   // Fetch total students in the classroom
   let totalStudents = 0;
@@ -28,13 +54,12 @@ router.get("/report/:token", async (req, res) => {
       .then(rows => rows.length);
   }
 
-  console.log("Total students in classroom:", totalStudents);
-
   res.json({
     student,
     reportCard,
-    score: score ? score.scores : null,
-    totalStudents, // <-- add this
+    score: filteredScores,
+    subjects: subjectsToShow,
+    totalStudents,
   });
 });
 

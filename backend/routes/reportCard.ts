@@ -17,6 +17,39 @@ type ScoreObj = {
 
 const router = Router();
 
+const ALLOWED_SUBJECT_KEYS = [
+  "khmerLiterature",
+  "mathematics",
+  "biology",
+  "chemistry",
+  "physics",
+  "history",
+  // ...add all your subject keys here
+];
+
+function cleanScoreObj(scoreObj: ScoreObj, selectedSubjects: string[]): ScoreObj {
+  const cleaned: ScoreObj = {
+    absent: "",
+    total: "",
+    average: "",
+    grade: "",
+    rank: "",
+  };
+  // Keep only selected subjects
+  for (const key of selectedSubjects) {
+    if (scoreObj[key] !== undefined) {
+      cleaned[key] = scoreObj[key];
+    }
+  }
+  // Always keep summary fields
+  ["absent", "total", "average", "grade", "rank"].forEach((key) => {
+    if (scoreObj[key] !== undefined) {
+      cleaned[key] = scoreObj[key];
+    }
+  });
+  return cleaned;
+}
+
 // List report cards for a classroom (only for the classroom owner)
 router.get("/classrooms/:classroomId/report-cards", async (req, res) => {
   if (!req.user || !req.user.id) return res.status(401).json({ error: "Unauthorized" });
@@ -47,8 +80,8 @@ router.get("/classrooms/:classroomId/report-cards", async (req, res) => {
 router.post("/classrooms/:classroomId/report-cards", async (req, res) => {
   if (!req.user || !req.user.id) return res.status(401).json({ error: "Unauthorized" });
   const classroomId = parseInt(req.params.classroomId);
-  const { title } = req.body;
-  if (!title) return res.status(400).json({ error: "Missing title" });
+  const { title, subjects } = req.body; // subjects: string[]
+  if (!title || !subjects) return res.status(400).json({ error: "Missing title or subjects" });
 
   // Only allow if user owns the classroom
   const [classroom] = await db.select().from(classrooms)
@@ -59,6 +92,7 @@ router.post("/classrooms/:classroomId/report-cards", async (req, res) => {
     .values({
       classroomId,
       title,
+      subjects, // Save selected subjects
       createdBy: req.user.id,
     })
     .returning();
@@ -85,21 +119,25 @@ router.delete("/:id", async (req, res) => {
 router.post("/:id/scores", async (req, res) => {
   const reportCardId = parseInt(req.params.id);
   const { scores } = req.body;
+
+  // Fetch selected subjects for this report card
+  const [reportCard] = await db.select().from(reportCards).where(eq(reportCards.id, reportCardId));
+  const selectedSubjects: string[] = reportCard?.subjects || [];
+
   try {
     for (const [studentId, scoreObjRaw] of Object.entries(scores)) {
-      const scoreObj = scoreObjRaw as ScoreObj;
+      // Clean the score object to only include selected subjects and summary fields
+      const scoreObj = cleanScoreObj(scoreObjRaw as ScoreObj, selectedSubjects);
 
-      // Defensive: skip if no studentId or scoreObj
       if (!studentId || !scoreObj) continue;
 
-      // Defensive: ensure all required fields are present
       await db
         .insert(reportCardScores)
         .values({
           reportCardId,
           studentId,
           absent: scoreObj.absent ?? "",
-          scores: scoreObj,
+          scores: scoreObj, // Only selected subjects and summary fields
           total: scoreObj.total ?? "",
           average: scoreObj.average ?? "",
           grade: scoreObj.grade ?? "",
@@ -109,7 +147,7 @@ router.post("/:id/scores", async (req, res) => {
           target: [reportCardScores.reportCardId, reportCardScores.studentId],
           set: {
             absent: scoreObj.absent ?? "",
-            scores: scoreObj,
+            scores: scoreObj, // Overwrite with cleaned object
             total: scoreObj.total ?? "",
             average: scoreObj.average ?? "",
             grade: scoreObj.grade ?? "",
@@ -119,7 +157,6 @@ router.post("/:id/scores", async (req, res) => {
     }
     res.json({ success: true });
   } catch (err) {
-    console.error("Failed to save scores:", err); // <--- Add this line
     res.status(500).json({ error: "Failed to save scores" });
   }
 });
@@ -150,7 +187,17 @@ router.get("/report/:token", async (req, res) => {
   if (!row) return res.status(404).json({ error: "Invalid or expired link" });
 
   // Fetch student info
-  const [student] = await db.select().from(students).where(eq(students.id, row.studentId));
+  const [student] = await db
+    .select({
+      id: students.id,
+      student_id: students.studentId, // <-- alias to match frontend
+      name: students.name,
+      gender: students.gender,
+      avatar: students.avatar,
+      // add other fields as needed
+    })
+    .from(students)
+    .where(eq(students.id, row.studentId));
   // Fetch report card info
   const [reportCard] = await db.select().from(reportCards).where(eq(reportCards.id, row.reportCardId));
   // Fetch scores
@@ -267,6 +314,18 @@ router.post("/:id/send-sms", async (req, res) => {
   } catch (err: any) {
     res.status(500).json({ error: "Failed to send report card SMS" });
   }
+});
+
+// Update subjects for a report card
+router.put("/:id/subjects", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { subjects } = req.body;
+  if (!Array.isArray(subjects)) return res.status(400).json({ error: "Invalid subjects" });
+
+  await db.update(reportCards)
+    .set({ subjects })
+    .where(eq(reportCards.id, id));
+  res.json({ success: true });
 });
 
 export default router;

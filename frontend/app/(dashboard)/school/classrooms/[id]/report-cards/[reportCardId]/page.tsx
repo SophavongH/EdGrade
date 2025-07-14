@@ -10,6 +10,7 @@ import {
   fetchCustomSubjects,
   addCustomSubject,
   deleteCustomSubject,
+  saveReportCardSubjects,
 } from "@/lib/api";
 import { useParams } from "next/navigation";
 import type { Student } from "@/types/student";
@@ -31,6 +32,14 @@ type StudentScores = {
   };
 };
 
+// Always return English grade for saving
+function getGrade(average: number): string {
+  if (average >= 40) return "Good";
+  if (average >= 33) return "Fairly Good";
+  if (average >= 25) return "Average";
+  return "Poor";
+}
+
 // Fixed subject keys
 const SUBJECT_KEYS = [
   "khmerLiterature",
@@ -48,18 +57,17 @@ export default function ReportCardDetailPage() {
   const reportCardId = params.reportCardId as string;
   const { t } = useLanguage();
 
-  // For subject selection modal, show translated names
   const DEFAULT_SUBJECTS = useMemo(() => SUBJECT_KEYS, []);
 
   const [students, setStudents] = useState<Student[]>([]);
   const [showSubjectModal, setShowSubjectModal] = useState(false);
-  const [selectedSubjects, setSelectedSubjects] = useState<string[]>(DEFAULT_SUBJECTS);
+  const [selectedSubjects, setSelectedSubjects] =
+    useState<string[]>(DEFAULT_SUBJECTS);
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [reportCard, setReportCard] = useState<ReportCard | null>(null);
 
-  // Editable scores state
   const [scores, setScores] = useState<StudentScores>({});
   const [saving, setSaving] = useState(false);
   const [customSubjects, setCustomSubjects] = useState<string[]>([]);
@@ -201,10 +209,12 @@ export default function ReportCardDetailPage() {
     }
   };
 
-  // Save handler (replace with your API call)
+  // Save handler: always save grade in English
   const handleSave = async () => {
     setSaving(true);
     try {
+      await saveReportCardSubjects(reportCardId, selectedSubjects);
+
       const tableSubjects = [...selectedSubjects];
       const totals = students.map((stu) =>
         tableSubjects.reduce((sum, subjectKey) => {
@@ -212,7 +222,6 @@ export default function ReportCardDetailPage() {
           return sum + (isNaN(val) ? 0 : val);
         }, 0)
       );
-      // Ranking logic
       const sortedTotals = [...totals]
         .map((total, idx) => ({ total, idx }))
         .sort((a, b) => b.total - a.total);
@@ -227,7 +236,6 @@ export default function ReportCardDetailPage() {
         currentRank++;
       }
 
-      // Build the payload with computed fields
       const payload: Record<string, StudentScores[string]> = {};
       students.forEach((stu, idx) => {
         const total = totals[idx];
@@ -236,10 +244,19 @@ export default function ReportCardDetailPage() {
             ? (total / tableSubjects.length).toFixed(2)
             : "0";
         const rank = ranks[idx];
+
+        // Only include selected subjects
+        const filteredScores: Record<string, string> = {};
+        tableSubjects.forEach((subjectKey) => {
+          filteredScores[subjectKey] = scores[stu.id]?.[subjectKey] || "";
+        });
+
         payload[stu.id] = {
-          ...scores[stu.id],
+          absent: scores[stu.id]?.absent || "",
+          ...filteredScores,
           total: String(total),
           average: String(average),
+          grade: getGrade(Number(average)),
           rank: String(rank),
         };
       });
@@ -361,7 +378,11 @@ export default function ReportCardDetailPage() {
                           className="w-16 border rounded px-1 py-0.5 text-center"
                           value={scores[stu.id]?.[subjectKey] || ""}
                           onChange={(e) =>
-                            handleScoreChange(stu.id, subjectKey, e.target.value)
+                            handleScoreChange(
+                              stu.id,
+                              subjectKey,
+                              e.target.value
+                            )
                           }
                         />
                       </td>
@@ -372,15 +393,15 @@ export default function ReportCardDetailPage() {
                     <td className="px-4 py-2 text-center font-semibold">
                       {average}
                     </td>
-                    <td className="px-4 py-2 text-center">
-                      <input
-                        type="text"
-                        className="w-16 border rounded px-1 py-0.5 text-center"
-                        value={scores[stu.id]?.grade || ""}
-                        onChange={(e) =>
-                          handleScoreChange(stu.id, "grade", e.target.value)
-                        }
-                      />
+                    <td className="px-4 py-2 text-center font-semibold">
+                      {t(
+                        {
+                          Good: "grade_good",
+                          "Fairly Good": "grade_fairly_good",
+                          Average: "grade_average",
+                          Poor: "grade_poor",
+                        }[getGrade(Number(average))] || "-"
+                      )}
                     </td>
                     <td className="px-4 py-2 text-center font-semibold">
                       {rank}
